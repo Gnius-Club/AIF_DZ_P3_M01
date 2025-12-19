@@ -16,7 +16,7 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial; background:radial-gradient(1200px 600px at 70% 0%, var(--bg2), var(--bg)); color:var(--ink)}
+  body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial; background:radial-gradient(1200px 600px at 70% 0%, var(--bg2), var(--bg)); color:var(--ink); padding-bottom: 4rem;}
   .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   button{border:0; cursor:pointer}
   button:focus-visible{outline:4px solid var(--focus); outline-offset:3px}
@@ -24,7 +24,8 @@
   header.panel{display:flex; gap:.6rem; align-items:center; justify-content:space-between; flex-wrap:wrap}
   header h1{margin:.2rem 0; font-size:clamp(1.3rem,2.2vw+1rem,2.3rem)}
   .toolbar{display:flex; gap:.5rem; align-items:center; flex-wrap:wrap}
-  .btn{border-radius:14px; padding:.55rem 1rem; font-weight:800}
+  .btn{border-radius:14px; padding:.55rem 1rem; font-weight:800; transition: transform 0.1s;}
+  .btn:active{transform: scale(0.96);}
   .btn-cta{background:linear-gradient(180deg, var(--accent), #0da1d1); color:#fff}
   .btn-ghost{background:transparent; color:var(--ink); border:2px solid var(--accent)}
   .switch{display:flex; align-items:center; gap:.4rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); padding:.35rem .6rem; border-radius:12px}
@@ -34,8 +35,10 @@
   .progress-dot.correct{background:var(--accent2); border-color:#1d6b32}
   .progress-dot.retry{background:var(--danger); border-color:#6b1220}
 
-  .fossils{display:grid; grid-template-columns:repeat(2,minmax(240px,1fr)); gap:1rem; padding:1rem}
-  .fossil{background:var(--card); border-radius:18px; padding:1rem; display:flex; gap:.8rem; align-items:center; box-shadow:0 10px 18px rgba(0,0,0,.35)}
+  .fossils{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; padding:1rem}
+  .fossil{background:var(--card); border-radius:18px; padding:1rem; display:flex; gap:.8rem; align-items:center; box-shadow:0 10px 18px rgba(0,0,0,.35); text-align: left; transition: transform 0.2s, box-shadow 0.2s;}
+  .fossil:hover{transform: translateY(-3px); box-shadow: 0 14px 24px rgba(0,0,0,0.5);}
+  .fossil.solved{opacity: 0.6; filter: grayscale(0.5);}
   .fossil .icon{width:56px;height:56px;flex:0 0 56px;color:var(--ink)}
   .fossil h3{margin:.15rem 0 .25rem 0; font-size:1.05rem; color:var(--ink)}
   .fossil p{margin:0; color:var(--muted)}
@@ -51,8 +54,8 @@
   #cIcon{display:flex; justify-content:center; margin:.3rem 0}
   #cIcon svg{max-width:160px}
   .qbadge{display:none; align-items:center; justify-content:center; gap:.4rem; margin:.4rem auto 0; width:max-content; padding:.2rem .6rem; border-radius:999px; font-weight:800; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22)}
-  .choices{display:flex; gap:1rem; justify-content:center; margin-top:1rem}
-  .choice{min-width:240px; font-size:1.1rem; font-weight:900; border-radius:16px; padding:.9rem 1rem; color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.35)}
+  .choices{display:flex; gap:1rem; justify-content:center; margin-top:1rem; flex-wrap: wrap;}
+  .choice{min-width:200px; font-size:1.1rem; font-weight:900; border-radius:16px; padding:.9rem 1rem; color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.35)}
   .positive{background:linear-gradient(180deg, var(--accent2), #1f8f4a)}
   .negative{background:linear-gradient(180deg, var(--danger), #9e1c2b)}
 
@@ -60,9 +63,53 @@
   #ccLive{background:var(--cc-bg); color:var(--cc-ink); border:2px solid var(--cc-border); border-radius:12px; padding:.6rem .8rem}
   #ccLog{margin-top:.4rem; max-height:140px; overflow:auto; font-size:.9rem; color:var(--muted)}
 
+  /* --- ÁLBUM MEJORADO --- */
   .album,.diary{margin:1rem auto; max-width:1000px}
-  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.8rem}
-  .card-know{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.16); border-radius:12px; padding:.6rem}
+  .cards-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top: 1rem;}
+  
+  .game-card {
+    background: linear-gradient(145deg, #1e2a4a, #162038);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-card::before{ content:''; position: absolute; top:-50%; left:-50%; width:200%; height:200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent); transform: rotate(45deg); pointer-events: none;}
+  .game-card.locked {
+    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.3);
+    box-shadow: none;
+  }
+  .game-card.locked .icon { opacity: 0.2; filter: grayscale(1); }
+  .game-card h4 { margin: 0.5rem 0; font-size: 1.1rem; color: var(--accent); }
+  .game-card.locked h4 { color: inherit; }
+  .game-card p { font-size: 0.9rem; line-height: 1.4; margin: 0; color: var(--muted); }
+  .game-card .status-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+  /* --- REWARD OVERLAY --- */
+  .reward-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000;
+    display: none; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(5px);
+  }
+  .reward-overlay.active { display: flex; opacity: 1; pointer-events: auto; }
+  .reward-content {
+    background: var(--card); border: 2px solid var(--gold); border-radius: 20px;
+    padding: 2rem; max-width: 400px; width: 90%; text-align: center;
+    transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 50px rgba(255, 197, 64, 0.2);
+  }
+  .reward-overlay.active .reward-content { transform: scale(1); }
+  .reward-star { font-size: 4rem; margin: 0; text-shadow: 0 0 20px var(--gold); animation: spinPop 1s ease; display: block;}
+  @keyframes spinPop { 0%{transform: scale(0) rotate(-180deg);} 70%{transform: scale(1.2) rotate(10deg);} 100%{transform: scale(1) rotate(0deg);} }
+  .reward-card-display { margin: 1.5rem auto; transform: rotate(-2deg); }
 
   .diploma{display:none; text-align:center; margin:1rem auto}
   .diploma canvas{max-width:100%; border:3px solid var(--gold); border-radius:16px}
@@ -77,13 +124,11 @@
 </head>
 <body>
   <header class="panel">
-    <h1>El Arqueólogo del Tiempo Digital: Ecos del Futuro</h1>
+    <h1>El Arqueólogo del Tiempo Digital</h1>
     <div class="toolbar">
-      <button id="startBtn" class="btn btn-cta">🚀 Comenzar expedición</button>
+      <button id="startBtn" class="btn btn-cta">🚀 Reiniciar Expedición</button>
       <button id="tutorialBtn" class="btn btn-ghost" title="Tutorial guiado">🧭 Tutorial</button>
-      <button id="challengeToggle" class="btn btn-ghost" aria-pressed="false" title="Modo Reto 90s">⏱️ Modo Reto</button>
-      <div class="switch" aria-label="Tiempo restante"><strong>⏳</strong> <span id="timer">—</span></div>
-      <div class="switch" aria-label="Energía Cronoscopio"><strong>⚡</strong><span id="energyBar" style="display:inline-flex; gap:.25rem"></span></div>
+      <div class="switch" aria-label="Energía"><strong>⚡</strong><span id="energyBar" style="display:inline-flex; gap:.25rem"></span></div>
     </div>
   </header>
 
@@ -95,30 +140,37 @@
     <div id="chrono" class="panel" role="dialog" aria-modal="true" aria-labelledby="cTitle" aria-describedby="cDesc">
       <h2 id="cTitle">Visión del Futuro</h2>
       <div id="cIcon" aria-hidden="true"></div>
-      <p id="cCause"></p>
-      <p id="cDesc"></p>
+      <p id="cCause" style="font-size:1.1rem; color:#fff"></p>
+      <p id="cDesc" style="color:var(--accent)"></p>
       <div id="qBadge" class="qbadge" aria-hidden="true">⏲️ <span id="qTime">12</span>s</div>
-      <div class="choices" role="group" aria-label="Clasificar huella">
-        <button class="choice positive" id="btnPos">👍 Huella Positiva <small style="display:block; font-weight:600">(ayuda, respeto)</small></button>
-        <button class="choice negative" id="btnNeg">👎 Huella Negativa <small style="display:block; font-weight:600">(riesgo, daño)</small></button>
+      
+      <div id="decisionArea">
+        <div class="choices" role="group" aria-label="Clasificar huella">
+          <button class="choice positive" id="btnPos">👍 Huella Positiva <small style="display:block; font-weight:600; font-size:0.8em; opacity:0.9">(ayuda, construye)</small></button>
+          <button class="choice negative" id="btnNeg">👎 Huella Negativa <small style="display:block; font-weight:600; font-size:0.8em; opacity:0.9">(riesgo, daña)</small></button>
+        </div>
       </div>
-      <div id="status" role="status" aria-live="polite" style="margin-top:.5rem"></div>
+      
+      <div id="status" role="status" aria-live="polite" style="margin-top:1rem; min-height: 2rem;"></div>
+      
+      <!-- Zona de Reflexión (se inyecta dinámicamente) -->
+      <div id="reflectionArea" style="display:none; margin-top:1rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem;"></div>
     </div>
   </main>
 
   <section id="cc" aria-label="Subtítulos">
     <div id="ccLive" aria-live="polite">—</div>
-    <div id="ccLog" aria-live="off"></div>
   </section>
 
+  <!-- SECCIÓN ÁLBUM MEJORADA -->
   <section class="panel album" id="albumSection">
-    <h2>📚 Álbum de Conocimiento</h2>
-    <div class="cards" id="albumCards"></div>
-  </section>
-
-  <section class="panel diary" id="diarySection">
-    <h2>📝 Diario de Ecos</h2>
-    <div id="diaryWrap"></div>
+    <div style="display:flex; justify-content:space-between; align-items:center">
+      <h2>📚 Álbum de Conocimiento</h2>
+      <span id="albumCount" style="background:var(--accent); color:#000; padding:2px 8px; border-radius:10px; font-weight:bold">0/4</span>
+    </div>
+    <div class="cards-grid" id="albumCards">
+      <!-- Se llenará con JS -->
+    </div>
   </section>
 
   <section class="diploma" id="diplomaSection">
@@ -127,15 +179,30 @@
     <p><button id="downloadDiploma" class="btn btn-cta">Descargar Diploma</button></p>
   </section>
 
+  <!-- OVERLAY DE RECOMPENSA (CARTA) -->
+  <div class="reward-overlay" id="rewardOverlay">
+    <div class="reward-content">
+      <div class="reward-star">🌟</div>
+      <h2 style="color:var(--gold); margin:0.5rem 0;">¡Excelente Trabajo!</h2>
+      <p>Has entendido la conexión y completado el análisis.</p>
+      
+      <div id="rewardCardContainer" class="reward-card-display">
+        <!-- Aquí se clona la carta ganada -->
+      </div>
+
+      <button id="collectCardBtn" class="btn btn-cta" style="font-size:1.2rem; width:100%; box-shadow: 0 4px 15px var(--accent);">
+        📥 Guardar en el Álbum
+      </button>
+    </div>
+  </div>
+
   <!-- Overlay Tutorial -->
-  <div class="tut-overlay" id="tutOverlay" role="dialog" aria-modal="true" aria-labelledby="tutTitle" aria-describedby="tutDesc" tabindex="-1">
+  <div class="tut-overlay" id="tutOverlay" role="dialog" aria-modal="true" aria-labelledby="tutTitle" tabindex="-1">
     <div class="tut-coach">
       <h2 id="tutTitle">🧭 Tutorial guiado</h2>
       <div id="tutDesc"></div>
-      <p class="tut-note">Usa <strong>Enter</strong> para continuar o <strong>Esc</strong> para salir.</p>
       <div class="tut-actions">
         <button class="btn btn-ghost" id="tutSkip">Saltar</button>
-        <button class="btn btn-cta" id="tutPrev">← Atrás</button>
         <button class="btn btn-cta" id="tutNext">Siguiente →</button>
       </div>
     </div>
@@ -144,126 +211,339 @@
 <script>
 /******** Datos ********/
 const BASE_FOSILES=[
- {id:'comentario', titulo:'El Comentario Enojado', tipo:'Comentario', causa:'Comentario “¡Perdimos por tu culpa, Leo! ¡Eres el peor!”', consecuencia:'Leo se entristece y deja el chat del equipo.', correcta:'negativo', pistas:['Observa cómo se siente la otra persona.','Un comentario hiriente daña el equipo.','Regla de oro: Trata como quieres ser tratado.'], card:'Usa lenguaje respetuoso.'},
- {id:'foto', titulo:'La Foto Graciosa en Pijama', tipo:'Foto', causa:'Foto de Alex en pijama con burla “¡Qué ridículo!”', consecuencia:'Un reclutador escolar decide no invitarlo a un club.', correcta:'negativo', pistas:['Las burlas públicas permanecen.','Afecta oportunidades futuras.','No publiques para ridiculizar.'], card:'Piensa antes de publicar.'},
- {id:'post', titulo:'El Post de Agradecimiento', tipo:'Post', causa:'Publicación agradeciendo a Sara por ayudar.', consecuencia:'Sara sonríe y fortalece su amistad con Alex.', correcta:'positivo', pistas:['¿Mejora la amistad?','Reconocer apoyo crea confianza.','Regla: Gratitud y respeto.'], card:'La gratitud pública es positiva.'},
- {id:'ubicacion', titulo:'La Ubicación Compartida', tipo:'Ubicación', causa:'Foto en “Parque Aventura” con ubicación pública.', consecuencia:'Un Robadatos identifica el lugar que frecuenta Alex.', correcta:'negativo', pistas:['Muestra tus rutinas.','Desconocidos podrían encontrarte.','Evita ubicación en tiempo real.'], card:'No publiques ubicación en tiempo real.'}
+ {id:'comentario', titulo:'El Comentario Enojado', tipo:'Comentario', causa:'Comentario: “¡Perdimos por tu culpa, Leo!”', consecuencia:'Leo abandona el equipo muy triste.', correcta:'negativo', pistas:['¿Ayuda o hiere al equipo?','Las palabras escritas permanecen.','Regla: Trata como quieres ser tratado.'], cardTitle:'Respeto Digital', cardText:'Tus palabras tienen poder. Si estás enojado, espera antes de escribir. Una disculpa a tiempo puede arreglarlo.'},
+ {id:'foto', titulo:'La Foto Graciosa', tipo:'Foto', causa:'Foto de Alex en pijama con burlas.', consecuencia:'Un club escolar lo rechaza por "inmaduro".', correcta:'negativo', pistas:['¿Te gustaría que todos lo vieran?','Afecta tu reputación futura.','No publiques para ridiculizar.'], cardTitle:'Imagen Pública', cardText:'Lo que subes hoy construye quién eres mañana. Pide permiso antes de subir fotos de otros.'},
+ {id:'post', titulo:'El Agradecimiento', tipo:'Post', causa:'Post público agradeciendo ayuda a Sara.', consecuencia:'Sara sonríe y la amistad mejora.', correcta:'positivo', pistas:['¿Crea confianza?','La gratitud pública es poderosa.','Genera un ambiente positivo.'], cardTitle:'Huella Positiva', cardText:'Internet también sirve para cosas buenas. Agradecer y apoyar crea una comunidad segura.'},
+ {id:'ubicacion', titulo:'Ubicación Exacta', tipo:'Ubicación', causa:'Foto etiquetada en "Parque Aventura" ahora.', consecuencia:'Un desconocido rastrea sus rutinas.', correcta:'negativo', pistas:['¿Es seguro decir dónde estás ya?','Muestra tus rutinas a extraños.','Publica la foto DESPUÉS de irte.'], cardTitle:'Seguridad Real', cardText:'Nunca compartas tu ubicación en tiempo real públicamente. Hazlo en privado o cuando ya te hayas ido.'}
 ];
 
 /******** Estado ********/
-const LS_ALBUM_KEY='ecos_album_v1'; const LS_DIARY_KEY='ecos_diario_v2';
-let orden=[], aciertos=0, intentos=[], current=null, energy=3, reto=false, tiempo=0, ticker=null, narrationOn=true, startedAt=null, bonusEstrellas=0;
-const RETO_TOTAL=90, RETO_PER_ATTEMPT=12; let qTicker=null, qTime=0; let currentSession=null;
-let tutorialMode=false, tutorialStep=0; let trapPrevFocus=null;
+const LS_COLLECTED='ecos_collected_ids'; 
+let orden=[], aciertos=0, intentos=[], current=null, energy=3, narrationOn=true;
+let tutorialMode=false, tutorialStep=0;
+let collectedCards = []; // IDs de las cartas conseguidas
 
 /******** Voz + CC ********/
-function cc(text){ const live=document.getElementById('ccLive'); const log=document.getElementById('ccLog'); if(!live) return; live.textContent=text; const stamp=new Date().toLocaleTimeString(); const div=document.createElement('div'); div.textContent=`[${stamp}] ${text}`; (log||{prepend:()=>{}}).prepend(div); }
-function speakBase(prefix, text, {rate=1, pitch=1}={}){ const full=`${prefix}${text}`; cc(full); if(!narrationOn||!('speechSynthesis' in window)) return; const u=new SpeechSynthesisUtterance(full); u.lang='es-MX'; u.rate=rate; u.pitch=pitch; try{ speechSynthesis.cancel(); }catch{} speechSynthesis.speak(u); }
-const speakGuardian=(t)=>speakBase('Guardián: ', t,{rate:1.02,pitch:1.15});
-const speakSystem=(t)=>speakBase('', t,{rate:1.0,pitch:0.95});
+function cc(text){ const live=document.getElementById('ccLive'); if(live) live.textContent=text; }
+function speakBase(prefix, text){ const full=`${prefix}${text}`; cc(full); if(!narrationOn||!('speechSynthesis' in window)) return; const u=new SpeechSynthesisUtterance(full); u.lang='es-MX'; try{ speechSynthesis.cancel(); }catch{} speechSynthesis.speak(u); }
+const speakGuardian=(t)=>speakBase('Guardián: ', t);
+const speakSystem=(t)=>speakBase('', t);
 
-/******** Util ********/
-function shuffle(a){const x=a.slice(); for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [x[i],x[j]]=[x[j],x[i]];} return x;}
+/******** Gráficos SVG ********/
 function iconForTypeSVG(tipo, size=56){
-  const common=(b)=>`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' width='${size}' height='${size}' role='img' aria-label='${tipo}' style='color:var(--ink)'>${b}</svg>`;
-  if(tipo==='Comentario') return common(`<rect x='10' y='20' rx='14' width='100' height='70' fill='var(--chip-chat)'></rect><circle cx='28' cy='50' r='6' fill='currentColor'/><circle cx='48' cy='50' r='6' fill='currentColor'/><circle cx='68' cy='50' r='6' fill='currentColor'/><path d='M30 90 L20 110 L48 92' fill='var(--chip-chat)'/>`);
-  if(tipo==='Foto') return common(`<rect x='14' y='24' rx='10' width='92' height='72' fill='var(--chip-foto)'></rect><circle cx='44' cy='50' r='10' fill='currentColor'/><path d='M34 78 L54 58 L72 72 L86 60 L100 78 Z' fill='currentColor'/>`);
-  if(tipo==='Post') return common(`<rect x='16' y='24' rx='10' width='88' height='72' fill='var(--chip-post)'></rect><rect x='28' y='40' width='64' height='10' rx='5' fill='currentColor'/><rect x='28' y='58' width='48' height='10' rx='5' fill='currentColor'/><path d='M90 84 a10 10 0 1 1 -20 0 a10 10 0 1 1 20 0' fill='currentColor'/>`);
-  return common(`<rect x='20' y='20' rx='12' width='80' height='80' fill='var(--chip-ubi)'></rect><path d='M60 36a18 18 0 0 0-18 18c0 14 18 36 18 36s18-22 18-36A18 18 0 0 0 60 36zm0 12a6 6 0 1 1 0 12 6 6 0 0 1 0-12z' fill='currentColor'/>`);
+  const common=(b)=>`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' width='${size}' height='${size}' role='img' aria-label='${tipo}' style='color:inherit'>${b}</svg>`;
+  if(tipo==='Comentario') return common(`<rect x='10' y='20' rx='14' width='100' height='70' fill='var(--chip-chat)'></rect><circle cx='28' cy='50' r='6' fill='#fff'/><circle cx='48' cy='50' r='6' fill='#fff'/><circle cx='68' cy='50' r='6' fill='#fff'/><path d='M30 90 L20 110 L48 92' fill='var(--chip-chat)'/>`);
+  if(tipo==='Foto') return common(`<rect x='14' y='24' rx='10' width='92' height='72' fill='var(--chip-foto)'></rect><circle cx='44' cy='50' r='10' fill='#fff'/><path d='M34 78 L54 58 L72 72 L86 60 L100 78 Z' fill='#fff'/>`);
+  if(tipo==='Post') return common(`<rect x='16' y='24' rx='10' width='88' height='72' fill='var(--chip-post)'></rect><rect x='28' y='40' width='64' height='10' rx='5' fill='#fff'/><rect x='28' y='58' width='48' height='10' rx='5' fill='#fff'/><path d='M90 84 a10 10 0 1 1 -20 0 a10 10 0 1 1 20 0' fill='#fff'/>`);
+  return common(`<rect x='20' y='20' rx='12' width='80' height='80' fill='var(--chip-ubi)'></rect><path d='M60 36a18 18 0 0 0-18 18c0 14 18 36 18 36s18-22 18-36A18 18 0 0 0 60 36zm0 12a6 6 0 1 1 0 12 6 6 0 0 1 0-12z' fill='#fff'/>`);
 }
-function microVignetteSVG(t){return iconForTypeSVG(t,140)}
+
+/******** Renderizado UI ********/
 function setEnergy(e){ energy=Math.max(0,Math.min(3,e)); const bar=document.getElementById('energyBar'); if(!bar) return; bar.innerHTML=''; for(let i=0;i<3;i++){const b=document.createElement('span'); b.style.width='18px';b.style.height='26px';b.style.display='inline-block';b.style.clipPath='polygon(45% 0, 60% 0, 40% 40%, 65% 40%, 25% 100%, 40% 60%, 15% 60%)'; b.style.background=i<energy?'var(--accent2)':'#6d7fb0'; b.style.border='2px solid '+(i<energy?'#1d6b32':'#3b4a7a'); bar.appendChild(b);} }
-function setTimerText(t){ const el=document.getElementById('timer'); if(el) el.textContent=t; }
 
-/******** Render ********/
-function renderProgress(){ const bar=document.getElementById('progressBar'); bar.innerHTML=''; orden.forEach((idx,i)=>{ const dot=document.createElement('div'); dot.className='progress-dot pending'; dot.id='dot'+i; dot.title=BASE_FOSILES[idx].titulo; bar.appendChild(dot); }); }
-function renderGrid(){ const grid=document.getElementById('grid'); grid.innerHTML=''; orden.forEach((idx,i)=>{ const f=BASE_FOSILES[idx]; const btn=document.createElement('button'); btn.className='fossil'; btn.setAttribute('role','listitem'); btn.setAttribute('aria-label', `${f.titulo}. ${f.causa}. Abrir cronoscopio.`); btn.innerHTML=`<div class="icon">${iconForTypeSVG(f.tipo)}</div><div><span class="chip chip--${f.tipo}">${f.tipo}</span><h3>${f.titulo}</h3><p><strong>Causa:</strong> ${f.causa}</p></div>`; btn.onclick=()=>mostrarFosil(i); grid.appendChild(btn); }); }
+function renderProgress(){ const bar=document.getElementById('progressBar'); bar.innerHTML=''; orden.forEach((idx,i)=>{ const dot=document.createElement('div'); dot.className='progress-dot pending'; dot.id='dot'+i; bar.appendChild(dot); }); }
 
-/******** Inicio / Reto ********/
-function iniciar(r){
-  reto=!!r; if(ticker){clearInterval(ticker); ticker=null;} if(qTicker){clearInterval(qTicker); qTicker=null;}
-  bonusEstrellas=0; startedAt=Date.now();
-  if(reto){ tiempo=90; setTimerText(tiempo+'s'); ticker=setInterval(()=>{ tiempo--; setTimerText(tiempo+'s'); if(tiempo<=0){ onGlobalTimeout(); } },1000);} else { setTimerText('—'); tiempo=0; }
-  orden=shuffle(BASE_FOSILES.map((_,i)=>i)); intentos=Array(orden.length).fill(0); aciertos=0; current=null; setEnergy(3);
-  renderProgress(); renderGrid(); document.getElementById('diplomaSection').style.display='none'; document.getElementById('chrono').style.display='none';
-  currentSession={ startedAt, reto, order:[...orden], fossils: orden.map(idx=>({ id:BASE_FOSILES[idx].id, titulo:BASE_FOSILES[idx].titulo, intentos:0, pistas:0, respuesta:'', correct:false, reflexion:'' })), cardsGained:[] };
-  if(!tutorialMode) speakGuardian('Bienvenido. Elige un fósil y usa el Cronoscopio.');
+function renderGrid(){ 
+  const grid=document.getElementById('grid'); grid.innerHTML=''; 
+  orden.forEach((idx,i)=>{ 
+    const f=BASE_FOSILES[idx]; 
+    const isSolved = collectedCards.includes(f.id);
+    const btn=document.createElement('button'); 
+    btn.className='fossil' + (isSolved ? ' solved' : ''); 
+    btn.disabled = isSolved;
+    btn.innerHTML=`<div class="icon">${iconForTypeSVG(f.tipo)}</div><div><span class="chip chip--${f.tipo}">${f.tipo}</span><h3>${f.titulo}</h3><p><strong>Estado:</strong> ${isSolved ? '✅ Completado' : '❓ Investigar'}</p></div>`; 
+    btn.onclick=()=>mostrarFosil(i); 
+    grid.appendChild(btn); 
+  }); 
 }
 
-/******** Cronoscopio + Trap ********/
-function mostrarFosil(i){ current=i; const f=BASE_FOSILES[orden[i]]; const ch=document.getElementById('chrono'); ch.classList.add('active'); ch.style.display='block'; document.getElementById('cTitle').textContent=f.titulo; document.getElementById('cCause').textContent='Causa: '+f.causa; document.getElementById('cDesc').textContent='Consecuencia: '+f.consecuencia; document.getElementById('cIcon').innerHTML=microVignetteSVG(f.tipo); document.getElementById('status').textContent='Elige si la huella es positiva o negativa.'; const first=document.getElementById('btnPos'); if(first) first.focus(); if(!tutorialMode) speakGuardian('Observa la visión. ¿Huella positiva o negativa?'); if(reto) startAttemptTimer(); }
-function updateQBadge(){ const b=document.getElementById('qBadge'); const t=document.getElementById('qTime'); if(!b||!t) return; if(reto && current!=null){ b.style.display='inline-flex'; t.textContent=qTime; } else { b.style.display='none'; } }
-function clearAttemptTimer(){ if(qTicker){ clearInterval(qTicker); qTicker=null; } qTime=0; updateQBadge(); }
-function startAttemptTimer(){ clearAttemptTimer(); qTime=RETO_PER_ATTEMPT; updateQBadge(); qTicker=setInterval(()=>{ qTime--; updateQBadge(); if(qTime<=0){ clearAttemptTimer(); penalizeTimeout(); } },1000); }
-function penalizeTimeout(){ if(current==null) return; const f=BASE_FOSILES[orden[current]]; intentos[current] = (intentos[current]||0) + 1; const foss=currentSession? currentSession.fossils[current] : null; if(foss){ foss.intentos=intentos[current]; foss.pistas=Math.min(f.pistas.length, intentos[current]); } const dot=document.getElementById('dot'+current); if(dot) dot.className='progress-dot retry'; setEnergy(energy-1); const paso=Math.min(intentos[current], f.pistas.length)-1; const pistaTxt=f.pistas[paso]||'¿Protege o arriesga la privacidad?'; document.getElementById('status').innerHTML='⏲️ Tiempo agotado.<br><small>'+pistaTxt+'</small>'; speakSystem('Tiempo agotado. '+pistaTxt); if(document.getElementById('chrono').classList.contains('active')){ if(reto) startAttemptTimer(); } }
+/* --- LÓGICA DEL ÁLBUM VISUAL --- */
+function renderAlbum(){ 
+  // Recuperar cartas guardadas
+  try { collectedCards = JSON.parse(localStorage.getItem(LS_COLLECTED) || '[]'); } catch(e){ collectedCards=[]; }
+  
+  const box=document.getElementById('albumCards'); 
+  box.innerHTML='';
+  document.getElementById('albumCount').textContent = `${collectedCards.length}/4`;
 
-/******** Clasificar + Reflexión ********/
-function clasificar(resp){ clearAttemptTimer(); if(current==null) return; const f=BASE_FOSILES[orden[current]]; const correcto=(resp===f.correcta); const dot=document.getElementById('dot'+current); const foss=currentSession? currentSession.fossils[current] : null; if(foss) foss.respuesta=resp;
-  if(correcto){ if(foss) foss.correct=true; aciertos++; if(dot) dot.className='progress-dot correct'; setEnergy(Math.min(3, energy+1)); speakSystem('¡Análisis correcto! Conectaste causa y efecto.');
-    document.getElementById('status').innerHTML=`<div class='panel' style='margin-top:.5rem'><strong>Reflexión:</strong> ¿Qué habría sido una mejor alternativa?<br><div style='display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem'><button class='choice positive' style='min-width:180px' id='optA'>${
-      f.id==='comentario'?'Pedir disculpas y apoyar a Leo': f.id==='foto'?'Pedir permiso antes de publicar': f.id==='post'?'Agradecer en público con respeto':'Compartir ubicación después (no en tiempo real)'
-    }</button><button class='choice negative' style='min-width:180px' id='optB'>${
-      f.id==='comentario'?'No escribir cuando estás enojado': f.id==='foto'?'Mantener fotos privadas si avergüenzan': f.id==='post'?'Escribir nota privada de agradecimiento':'Enviar lugar por mensaje privado a amigos'
-    }</button></div></div>`;
-    const save=(sel)=>{ if(!tutorialMode){ const album=JSON.parse(localStorage.getItem(LS_ALBUM_KEY)||'[]'); album.push('Reflexión - '+f.titulo+': '+sel); localStorage.setItem(LS_ALBUM_KEY, JSON.stringify(album)); renderAlbum(); } cerrarCrono(); if(aciertos===orden.length) finalizar(); };
-    document.getElementById('optA').onclick=()=>save(document.getElementById('optA').textContent);
-    document.getElementById('optB').onclick=()=>save(document.getElementById('optB').textContent);
-  } else { if(foss){ intentos[current]++; foss.intentos=intentos[current]; foss.pistas=Math.min(f.pistas.length,intentos[current]); }
-    if(dot) dot.className='progress-dot retry'; setEnergy(energy-1); const paso=Math.min(intentos[current], f.pistas.length)-1; const pistaTxt=f.pistas[paso]||'Observa si la consecuencia ayuda o daña.'; document.getElementById('status').innerHTML='❌ Piénsalo de nuevo.<br><small>'+pistaTxt+'</small>'; speakSystem('Piénsalo de nuevo. '+pistaTxt); }
+  BASE_FOSILES.forEach(f => {
+    const isUnlocked = collectedCards.includes(f.id);
+    const cardDiv = document.createElement('div');
+    cardDiv.className = `game-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+    
+    if(isUnlocked){
+      cardDiv.innerHTML = `
+        <div class="icon" style="color:var(--ink)">${iconForTypeSVG(f.tipo, 48)}</div>
+        <h4>${f.cardTitle}</h4>
+        <p>${f.cardText}</p>
+      `;
+    } else {
+      cardDiv.innerHTML = `
+        <div class="status-icon">🔒</div>
+        <h4>Bloqueado</h4>
+        <p>Resuelve el caso "${f.titulo}" para ver esta carta.</p>
+      `;
+    }
+    box.appendChild(cardDiv);
+  });
 }
-function cerrarCrono(){ const c=document.getElementById('chrono'); c.classList.remove('active'); c.style.display='none'; current=null; }
 
-/******** Global timeout ********/
-function onGlobalTimeout(){ if(ticker){clearInterval(ticker); ticker=null;} setTimerText('0s'); setEnergy(energy-1); speakSystem('⏲️ Tiempo total agotado. Pierdes una carga del Cronoscopio, pero puedes continuar.'); reto=false; const ch=document.getElementById('challengeToggle'); ch.setAttribute('aria-pressed','false'); ch.textContent='⏱️ Modo Reto'; clearAttemptTimer(); }
+/******** Flujo del Juego ********/
+function iniciar(){
+  orden=BASE_FOSILES.map((_,i)=>i); 
+  // No aleatorizamos orden para simplificar debug, descomentar si se desea:
+  // orden.sort(() => Math.random() - 0.5);
+  
+  intentos=Array(orden.length).fill(0); 
+  aciertos=0; current=null; setEnergy(3);
+  
+  // Limpiar colección al iniciar partida nueva si se desea, o mantener progreso:
+  // collectedCards = []; localStorage.setItem(LS_COLLECTED, '[]'); 
+  // *Para este demo, mantenemos progreso entre recargas, pero botón inicio limpia sesión visual actual*
+  
+  renderAlbum(); // Dibuja el estado actual
+  renderProgress(); 
+  renderGrid(); 
+  
+  document.getElementById('diplomaSection').style.display='none'; 
+  document.getElementById('chrono').style.display='none';
+  if(!tutorialMode && collectedCards.length < 4) speakGuardian('Bienvenido Arqueólogo. Tienes fósiles pendientes por analizar.');
+  if(collectedCards.length === 4) finalizar();
+}
 
-/******** Diploma + Álbum + Diario (mínimo) ********/
-function drawStar(ctx,x,y,r,n,inset,color){ctx.save();ctx.fillStyle=color;ctx.beginPath();ctx.translate(x,y);ctx.moveTo(0,0-r);for(let i=0;i<n;i++){ctx.rotate(Math.PI/n);ctx.lineTo(0,0-(r/inset));ctx.rotate(Math.PI/n);ctx.lineTo(0,0-r);}ctx.fill();ctx.restore();}
-function mostrarDiploma(){ const section=document.getElementById('diplomaSection'); section.style.display='block'; const canvas=document.getElementById('diplomaCanvas'); const ctx=canvas.getContext('2d'); const css=getComputedStyle(document.body); const cInk=(css.getPropertyValue('--ink')||'#222').trim(); const cCard=(css.getPropertyValue('--card')||'#fff8e1').trim(); const cGold=(css.getPropertyValue('--gold')||'#fbc02d').trim(); ctx.fillStyle=cCard; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.strokeStyle=cGold; ctx.lineWidth=12; ctx.strokeRect(24,24,canvas.width-48,canvas.height-48); ctx.fillStyle=cInk; ctx.font='bold 40px Arial'; ctx.fillText('Diploma: Arqueólogo/a de la Sabiduría', 60, 130); ctx.font='22px Arial'; ctx.fillText('Por clasificar correctamente los 4 fósiles', 60, 175); const stars=reto&&tiempo>20?Math.min(3,1+Math.floor((tiempo-20)/20)):0; for(let i=0;i<stars;i++){drawStar(ctx,60+i*40,210,14,5,2,cGold);} const date=new Date().toLocaleDateString(); ctx.fillStyle=(css.getPropertyValue('--muted')||'#555').trim(); ctx.font='20px Arial'; ctx.fillText('Fecha: '+date,60,245); }
-function renderAlbum(){ const box=document.getElementById('albumCards'); const cards=JSON.parse(localStorage.getItem(LS_ALBUM_KEY)||'[]'); box.innerHTML=cards.length?cards.map(c=>`<div class='card-know'><h4>Tarjeta</h4><p>${c}</p></div>`).join(''):'<p>Sin tarjetas aún.</p>'; }
-function renderDiary(){ const wrap=document.getElementById('diaryWrap'); const d=JSON.parse(localStorage.getItem(LS_DIARY_KEY)||'[]'); wrap.innerHTML=d.length? d.map((s,si)=>`<details ${si===0?'open':''}><summary>${new Date(s.startedAt).toLocaleString()} · ${s.reto?'Reto 90s':'Normal'} · Tiempo: ${s.totalSeconds}s · Pistas: ${s.totalHints} · Correctos: ${s.correct}/${s.total}</summary></details>`).join('') : '<p>Sin sesiones aún.</p>'; }
-function finalizar(){ if(ticker){clearInterval(ticker); ticker=null;} clearAttemptTimer(); const finishedAt=Date.now(); const totalSeconds = currentSession && currentSession.reto ? (90 - tiempo) : Math.round((finishedAt - startedAt)/1000); const totalHints = currentSession ? currentSession.fossils.reduce((a,b)=>a+(b.pistas||0),0) : 0; if(currentSession){ currentSession.finishedAt=finishedAt; currentSession.totalSeconds=totalSeconds; currentSession.totalHints=totalHints; currentSession.correct=aciertos; currentSession.total=orden.length; const d=JSON.parse(localStorage.getItem(LS_DIARY_KEY)||'[]'); d.unshift(currentSession); localStorage.setItem(LS_DIARY_KEY, JSON.stringify(d)); renderDiary(); } speakGuardian('¡Misión cumplida! Has obtenido el título de Arqueólogo de la Sabiduría.'); mostrarDiploma(); }
+/******** Cronoscopio ********/
+function mostrarFosil(i){ 
+  current=i; 
+  const f=BASE_FOSILES[orden[i]]; 
+  const ch=document.getElementById('chrono'); 
+  ch.classList.add('active'); ch.style.display='block'; 
+  
+  // Resetear vista del cronoscopio
+  document.getElementById('cTitle').textContent=f.titulo; 
+  document.getElementById('cCause').textContent='Causa: '+f.causa; 
+  document.getElementById('cDesc').textContent='Consecuencia: '+f.consecuencia; 
+  document.getElementById('cIcon').innerHTML=iconForTypeSVG(f.tipo, 100); 
+  document.getElementById('status').textContent='Analiza: ¿Esto fue positivo o negativo?';
+  
+  document.getElementById('decisionArea').style.display = 'block';
+  document.getElementById('reflectionArea').style.display = 'none';
+  document.getElementById('reflectionArea').innerHTML = '';
+  
+  document.getElementById('grid').scrollIntoView({behavior:'smooth'});
+  speakGuardian('He activado el Cronoscopio. Mira la consecuencia.'); 
+}
 
-/******** Tutorial ********/
-const tutOverlay=document.getElementById('tutOverlay'); const tutDesc=document.getElementById('tutDesc'); const tutTitle=document.getElementById('tutTitle');
-const tutNext=document.getElementById('tutNext'); const tutPrev=document.getElementById('tutPrev'); const tutSkip=document.getElementById('tutSkip');
+function clasificar(resp){ 
+  if(current==null) return; 
+  const f=BASE_FOSILES[orden[current]]; 
+  const correcto=(resp===f.correcta); 
+  const dot=document.getElementById('dot'+current); 
+
+  if(correcto){ 
+    // ÉXITO
+    if(dot) dot.className='progress-dot correct'; 
+    setEnergy(Math.min(3, energy+1)); 
+    speakSystem('¡Correcto! Entendiste la relación.');
+    
+    // Ocultar botones de decisión y mostrar reflexión
+    document.getElementById('decisionArea').style.display = 'none';
+    const refArea = document.getElementById('reflectionArea');
+    refArea.style.display = 'block';
+    
+    // Generar opciones de reflexión
+    const optAText = f.id==='comentario'?'Pedir disculpas y hablarlo en persona': f.id==='foto'?'Pedir permiso antes de subirla': f.id==='post'?'Agradecer con respeto':'Compartir la ubicación al salir del lugar';
+    const optBText = f.id==='comentario'?'Bloquear a todos': f.id==='foto'?'Borrarla y no decir nada': f.id==='post'?'Pedirle dinero':'No decir nunca dónde estás';
+    
+    refArea.innerHTML = `
+      <p><strong>Reflexión Final:</strong> ¿Qué acción construirá un mejor futuro?</p>
+      <div style='display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap'>
+        <button class='choice positive' id='refA' style="font-size:0.9rem; padding:0.6rem">${optAText}</button>
+        <button class='choice negative' id='refB' style="font-size:0.9rem; padding:0.6rem; opacity:0.7">${optBText}</button>
+      </div>
+    `;
+
+    // Ambas opciones llevan a la recompensa (el aprendizaje es la selección previa)
+    // pero la UI sugiere la correcta con colores.
+    document.getElementById('refA').onclick = () => triggerReward(f);
+    document.getElementById('refB').onclick = () => triggerReward(f);
+    
+    document.getElementById('status').innerHTML = "¡Excelente! Ahora elige la mejor acción para cerrar el caso.";
+
+  } else { 
+    // ERROR
+    if(dot) dot.className='progress-dot retry'; 
+    setEnergy(energy-1); 
+    const pista = f.pistas[intentos[current] % f.pistas.length];
+    intentos[current]++;
+    document.getElementById('status').innerHTML=`❌ Piénsalo bien. <br><span style="color:var(--focus)">Pista: ${pista}</span>`; 
+    speakSystem('Inténtalo de nuevo. ' + pista); 
+  }
+}
+
+/* --- SISTEMA DE RECOMPENSAS --- */
+function triggerReward(fossilData){
+  // 1. Cerrar Cronoscopio
+  document.getElementById('chrono').classList.remove('active');
+  document.getElementById('chrono').style.display='none';
+
+  // 2. Preparar Overlay
+  const overlay = document.getElementById('rewardOverlay');
+  const cardContainer = document.getElementById('rewardCardContainer');
+  
+  // Crear visualmente la carta para el overlay
+  cardContainer.innerHTML = `
+    <div class="game-card" style="width:220px; margin:0 auto; transform:scale(1.1); box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+      <div class="icon" style="color:#fff">${iconForTypeSVG(fossilData.tipo, 60)}</div>
+      <h4 style="color:var(--accent); font-size:1.3rem; margin:0.5rem 0">${fossilData.cardTitle}</h4>
+      <p style="color:#ddd">${fossilData.cardText}</p>
+    </div>
+  `;
+
+  // 3. Mostrar Overlay
+  overlay.classList.add('active');
+  speakGuardian('¡Magnífico! Has desbloqueado una nueva tarjeta de sabiduría.');
+  
+  // Configurar el botón "Guardar"
+  const btn = document.getElementById('collectCardBtn');
+  btn.onclick = () => {
+    collectCard(fossilData.id);
+  };
+  btn.focus();
+}
+
+function collectCard(id){
+  // 1. Guardar datos
+  if(!collectedCards.includes(id)){
+    collectedCards.push(id);
+    localStorage.setItem(LS_COLLECTED, JSON.stringify(collectedCards));
+  }
+  
+  // 2. Ocultar Overlay
+  document.getElementById('rewardOverlay').classList.remove('active');
+  
+  // 3. Actualizar UI
+  renderAlbum();
+  renderGrid(); // Bloquea el fósil completado
+  
+  // 4. Scroll al álbum para feedback visual
+  document.getElementById('albumSection').scrollIntoView({behavior:'smooth'});
+  speakSystem('Tarjeta guardada en el álbum.');
+
+  // 5. Verificar victoria
+  if(collectedCards.length === BASE_FOSILES.length){
+    setTimeout(finalizar, 1500);
+  }
+}
+
+function finalizar(){
+  speakGuardian('¡Misión cumplida! Has completado el Álbum de Ecos y eres un experto.'); 
+  mostrarDiploma();
+  document.getElementById('diplomaSection').scrollIntoView({behavior:'smooth'});
+}
+
+/* --- DIPLOMA --- */
+function mostrarDiploma(){ 
+  const section=document.getElementById('diplomaSection'); section.style.display='block'; 
+  const canvas=document.getElementById('diplomaCanvas'); const ctx=canvas.getContext('2d'); 
+  
+  // Fondo
+  ctx.fillStyle='#fff8e1'; ctx.fillRect(0,0,canvas.width,canvas.height); 
+  ctx.strokeStyle='#fbc02d'; ctx.lineWidth=15; ctx.strokeRect(20,20,canvas.width-40,canvas.height-40); 
+  
+  // Texto
+  ctx.fillStyle='#222'; ctx.font='bold 40px Arial'; ctx.textAlign='center';
+  ctx.fillText('CERTIFICADO DE EXCELENCIA', canvas.width/2, 120); 
+  
+  ctx.font='30px Arial';
+  ctx.fillText('Se otorga el título de:', canvas.width/2, 180); 
+  
+  ctx.fillStyle='#2B7EA7'; ctx.font='bold 50px Arial';
+  ctx.fillText('ARQUEÓLOGO/A DIGITAL', canvas.width/2, 250); 
+  
+  ctx.fillStyle='#555'; ctx.font='24px Arial';
+  ctx.fillText('Por comprender que cada huella deja un eco en el futuro.', canvas.width/2, 320); 
+  
+  // Estrellas
+  ctx.fillStyle='#fbc02d';
+  for(let i=0; i<4; i++){
+    let x = 350 + (i*70);
+    drawStar(ctx, x, 400, 20, 5, 2);
+  }
+  
+  const date=new Date().toLocaleDateString(); 
+  ctx.font='20px Arial'; ctx.fillStyle='#888';
+  ctx.fillText('Fecha: '+date,canvas.width/2, 500); 
+}
+
+function drawStar(ctx,x,y,r,n,inset){
+  ctx.save(); ctx.beginPath(); ctx.translate(x,y); ctx.moveTo(0,0-r);
+  for(let i=0;i<n;i++){ ctx.rotate(Math.PI/n); ctx.lineTo(0,0-(r/inset)); ctx.rotate(Math.PI/n); ctx.lineTo(0,0-r); }
+  ctx.fill(); ctx.restore();
+}
+
+/* --- TUTORIAL --- */
 const TSTEPS=[
-  {title:'Bienvenida',sel:null,txt:'Te enseñaré la dinámica y cada herramienta: fósiles, cronoscopio, vidas ⚡, Modo Reto ⏱, pistas, subtítulos y diploma.',act:()=>{speakGuardian('Bienvenido al tutorial.');}},
-  {title:'Panel superior',sel:'.toolbar',txt:'Aquí controlas el juego: Comenzar, Tutorial, Modo Reto, temporizador y energía ⚡.',act:()=>{}},
-  {title:'Progreso',sel:'#progressBar',txt:'Estos puntos muestran tu avance. Verde=correcto, Rojo=reintento.',act:()=>{}},
-  {title:'Fósiles',sel:'#grid',txt:'Elige uno para abrir el Cronoscopio. Haremos clic por ti en un ejemplo.',act:()=>{if(!orden.length) iniciar(false); const b=document.querySelector('#grid .fossil'); if(b){ b.classList.add('highlight-ring'); setTimeout(()=>b.click(),600); }}},
-  {title:'Cronoscopio',sel:'#chrono',txt:'Verás la causa y su eco en el futuro. Decide si es positiva o negativa.',act:()=>{speakGuardian('Observa y decide.')}},
-  {title:'Botones de decisión',sel:'#chrono .choices',txt:'Elige 👍 o 👎. En Modo Reto verás un temporizador por intento.',act:()=>{}},
-  {title:'Pistas',sel:'#status',txt:'Si fallas o se agota el tiempo, verás pistas cada vez más claras.',act:()=>{}},
-  {title:'Vidas ⚡',sel:'#energyBar',txt:'Cada error o tiempo agotado consume una carga; cada acierto recarga una.',act:()=>{}},
-  {title:'Modo Reto ⏱',sel:'#challengeToggle',txt:'90s globales + 12s por intento. Aumenta el reto y la atención.',act:()=>{}},
-  {title:'Subtítulos',sel:'#cc',txt:'Todo lo narrado aparece también como texto aquí.',act:()=>{}},
-  {title:'Álbum y Diario',sel:'#albumSection',txt:'Colecciona tarjetas al acertar y revisa tu evidencia en el Diario.',act:()=>{}},
-  {title:'Diploma',sel:'#diplomaSection',txt:'Al completar los 4 fósiles obtendrás un diploma descargable.',act:()=>{}},
-  {title:'¡Listo!',sel:null,txt:'Fin del tutorial. Ahora juega una partida real.',act:()=>{}}
+  {txt:'¡Hola! Soy el Guardián. Te enseñaré a rastrear huellas digitales.', act:()=>{}},
+  {sel:'#grid', txt:'Aquí están los fósiles digitales. Elige uno para investigar.', act:()=>{}},
+  {sel:'#albumSection', txt:'Tu objetivo es desbloquear las 4 tarjetas del Álbum.', act:()=>{document.getElementById('albumSection').scrollIntoView()}},
+  {sel:null, txt:'¡Comencemos! Elige un fósil y usa el Cronoscopio.', act:()=>{document.getElementById('game').scrollIntoView()}}
 ];
-function highlight(sel){ document.querySelectorAll('.highlight-ring').forEach(el=>el.classList.remove('highlight-ring')); if(!sel) return; const el=document.querySelector(sel); if(el){ el.classList.add('highlight-ring'); el.scrollIntoView({behavior:'smooth', block:'center'}); } }
-function showStep(i){ tutorialStep=i; const s=TSTEPS[i]; tutTitle.textContent='🧭 '+s.title; tutDesc.textContent=s.txt; highlight(s.sel); if(typeof s.act==='function') s.act(); tutPrev.disabled=(i===0); tutNext.textContent=(i===TSTEPS.length-1)?'Finalizar':'Siguiente →'; }
-function startTutorial(){ tutorialMode=true; if(!orden.length) iniciar(false); setTimeout(()=>{ tutOverlay.classList.add('active'); tutOverlay.focus(); showStep(0); }, 50); }
-function endTutorial(){ tutorialMode=false; tutOverlay.classList.remove('active'); document.querySelectorAll('.highlight-ring').forEach(el=>el.classList.remove('highlight-ring')); }
+function runTutorial(){
+  tutorialMode=true;
+  const overlay=document.getElementById('tutOverlay');
+  const title=document.getElementById('tutTitle');
+  const desc=document.getElementById('tutDesc');
+  const btnNext=document.getElementById('tutNext');
+  
+  let step=0;
+  overlay.classList.add('active');
+  
+  const show=()=>{
+    const s=TSTEPS[step];
+    desc.textContent=s.txt;
+    document.querySelectorAll('.highlight-ring').forEach(e=>e.classList.remove('highlight-ring'));
+    if(s.sel){
+      const el=document.querySelector(s.sel);
+      if(el) { el.classList.add('highlight-ring'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+    }
+    if(s.act) s.act();
+    btnNext.textContent = step===TSTEPS.length-1 ? 'Jugar' : 'Siguiente';
+  };
+  
+  show();
+  
+  btnNext.onclick=()=>{
+    step++;
+    if(step>=TSTEPS.length){ 
+      tutorialMode=false; overlay.classList.remove('active'); 
+      document.querySelectorAll('.highlight-ring').forEach(e=>e.classList.remove('highlight-ring'));
+    } else { show(); }
+  };
+  document.getElementById('tutSkip').onclick=()=>{
+      tutorialMode=false; overlay.classList.remove('active');
+      document.querySelectorAll('.highlight-ring').forEach(e=>e.classList.remove('highlight-ring'));
+  };
+}
 
-tutNext.onclick=()=>{ if(tutorialStep<TSTEPS.length-1) showStep(tutorialStep+1); else endTutorial(); };
- tutPrev.onclick=()=>{ if(tutorialStep>0) showStep(tutorialStep-1); };
- tutSkip.onclick=()=> endTutorial();
- document.getElementById('tutorialBtn').onclick=()=> startTutorial();
- document.addEventListener('keydown',(e)=>{ if(!tutorialMode) return; if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tutNext.click(); } if(e.key==='Escape'){ e.preventDefault(); tutSkip.click(); } });
+/******** Listeners ********/
+document.getElementById('btnPos').onclick=()=>clasificar('positivo');
+document.getElementById('btnNeg').onclick=()=>clasificar('negativo');
+document.getElementById('startBtn').onclick=()=>{ 
+  if(confirm('¿Reiniciar todo el progreso?')){
+    localStorage.removeItem(LS_COLLECTED);
+    iniciar(); 
+  }
+};
+document.getElementById('tutorialBtn').onclick=()=>runTutorial();
+document.getElementById('downloadDiploma').onclick=()=>{ 
+  const link=document.createElement('a'); link.download='diploma-ecos.png'; 
+  link.href=document.getElementById('diplomaCanvas').toDataURL(); link.click(); 
+};
 
-/******** Eventos UI ********/
- document.getElementById('btnPos').onclick=()=>clasificar('positivo');
- document.getElementById('btnNeg').onclick=()=>clasificar('negativo');
- document.getElementById('startBtn').onclick=()=>{ tutorialMode=false; iniciar(reto); };
- document.getElementById('challengeToggle').onclick=(e)=>{ reto=!reto; e.currentTarget.setAttribute('aria-pressed', reto); e.currentTarget.textContent = reto? '⏱️ Modo Reto ON' : '⏱️ Modo Reto'; if(reto){ if(!tiempo||tiempo<=0){ tiempo=90; setTimerText(tiempo+'s'); } if(!ticker){ ticker=setInterval(()=>{ tiempo--; setTimerText(tiempo+'s'); if(tiempo<=0){ onGlobalTimeout(); } },1000);} if(current!=null) startAttemptTimer(); speakSystem('Modo Reto activado.'); } else { if(ticker){ clearInterval(ticker); ticker=null; } clearAttemptTimer(); setTimerText('—'); speakSystem('Modo Reto desactivado.'); } };
- document.getElementById('downloadDiploma').onclick=()=>{ const canvas=document.getElementById('diplomaCanvas'); const a=document.createElement('a'); a.download='diploma.png'; a.href=canvas.toDataURL('image/png'); a.click(); };
+// Arranque
+renderAlbum();
+if(collectedCards.length < 4) iniciar(); else { renderGrid(); finalizar(); }
 
-/******** Inicial ********/
-setEnergy(3); (function bootstrap(){ orden=BASE_FOSILES.map((_,i)=>i); renderProgress(); renderGrid(); cc('Guardián: Bienvenido a Ecos del Futuro. Pulsa Comenzar expedición o abre el Tutorial.'); })();
-
-/******** SW Offline ********/
-if('serviceWorker' in navigator){ const sw=`const C='ecos-v3'; self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll([self.registration.scope])).then(()=>self.skipWaiting()))}); self.addEventListener('activate',e=>{e.waitUntil(self.clients.claim())}); self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).then(res=>{const cp=res.clone(); caches.open(C).then(c=>c.put(e.request,cp)); return res;}).catch(()=>r)))})`; const url=URL.createObjectURL(new Blob([sw],{type:'text/javascript'})); navigator.serviceWorker.register(url).catch(()=>{}); }
 </script>
 </body>
 </html>
