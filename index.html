@@ -1,441 +1,549 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" translate="no">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playbook-P3-TM1</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<meta name="theme-color" content="#0A0F1F" />
+<title>El Arqueólogo del Tiempo Digital: Ecos del Futuro</title>
+<link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Ecos del Futuro&quot;,&quot;short_name&quot;:&quot;Ecos&quot;,&quot;start_url&quot;:&quot;.&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;#0A0F1F&quot;,&quot;theme_color&quot;:&quot;#0A0F1F&quot;}" />
+<style>
+  /* ====== Paleta con contraste accesible ====== */
+  :root{
+    --bg:#0A0F1F; --bg2:#0f1833; --card:#111A33; --ink:#FFFFFF; --muted:#D7E3FF;
+    --accent:#2FD0FF; --accent2:#39E06C; --danger:#E64556; --gold:#FFC540; --focus:#FFF176;
+    --chip-chat:#2B7EA7; --chip-foto:#B88600; --chip-post:#2C8C4A; --chip-ubi:#B04A35;
+    --cc-bg:rgba(0,0,0,.6); --cc-ink:#fff; --cc-border:rgba(255,255,255,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial; background:radial-gradient(1200px 600px at 70% 0%, var(--bg2), var(--bg)); color:var(--ink); padding-bottom: 4rem;}
+  .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  button{border:0; cursor:pointer}
+  button:focus-visible{outline:4px solid var(--focus); outline-offset:3px}
+  .panel{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:1rem}
+  header.panel{display:flex; gap:.6rem; align-items:center; justify-content:space-between; flex-wrap:wrap}
+  header h1{margin:.2rem 0; font-size:clamp(1.3rem,2.2vw+1rem,2.3rem)}
+  .toolbar{display:flex; gap:.5rem; align-items:center; flex-wrap:wrap}
+  .btn{border-radius:14px; padding:.55rem 1rem; font-weight:800; transition: transform 0.1s;}
+  .btn:active{transform: scale(0.96);}
+  .btn-cta{background:linear-gradient(180deg, var(--accent), #0da1d1); color:#fff}
+  .btn-ghost{background:transparent; color:var(--ink); border:2px solid var(--accent)}
+  .switch{display:flex; align-items:center; gap:.4rem; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); padding:.35rem .6rem; border-radius:12px}
+
+  .progress-bar{display:flex; gap:.6rem; justify-content:center; margin:.5rem auto}
+  .progress-dot{width:20px; height:20px; border-radius:50%; background:#6d7fb0; border:2px solid #3b4a7a}
+  .progress-dot.correct{background:var(--accent2); border-color:#1d6b32}
+  .progress-dot.retry{background:var(--danger); border-color:#6b1220}
+
+  .fossils{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; padding:1rem}
+  .fossil{background:var(--card); border-radius:18px; padding:1rem; display:flex; gap:.8rem; align-items:center; box-shadow:0 10px 18px rgba(0,0,0,.35); text-align: left; transition: transform 0.2s, box-shadow 0.2s;}
+  .fossil:hover{transform: translateY(-3px); box-shadow: 0 14px 24px rgba(0,0,0,0.5);}
+  .fossil.solved{opacity: 0.6; filter: grayscale(0.5);}
+  .fossil .icon{width:56px;height:56px;flex:0 0 56px;color:var(--ink)}
+  .fossil h3{margin:.15rem 0 .25rem 0; font-size:1.05rem; color:var(--ink)}
+  .fossil p{margin:0; color:var(--muted)}
+  .chip{display:inline-block; padding:.25rem .6rem; border-radius:12px; font-size:.8rem; margin-bottom:.25rem; font-weight:800;color:#fff}
+  .chip--Comentario{background:var(--chip-chat)}
+  .chip--Foto{background:var(--chip-foto)}
+  .chip--Post{background:var(--chip-post)}
+  .chip--Ubicación{background:var(--chip-ubi)}
+
+  #chrono{display:none; margin-top:1rem}
+  #chrono.active{display:block; animation:zoomIn .35s ease}
+  @keyframes zoomIn{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+  #cIcon{display:flex; justify-content:center; margin:.3rem 0}
+  #cIcon svg{max-width:160px}
+  .qbadge{display:none; align-items:center; justify-content:center; gap:.4rem; margin:.4rem auto 0; width:max-content; padding:.2rem .6rem; border-radius:999px; font-weight:800; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22)}
+  .choices{display:flex; gap:1rem; justify-content:center; margin-top:1rem; flex-wrap: wrap;}
+  .choice{min-width:200px; font-size:1.1rem; font-weight:900; border-radius:16px; padding:.9rem 1rem; color:#fff; text-shadow:0 1px 0 rgba(0,0,0,.35)}
+  .positive{background:linear-gradient(180deg, var(--accent2), #1f8f4a)}
+  .negative{background:linear-gradient(180deg, var(--danger), #9e1c2b)}
+
+  #cc{margin:.6rem auto; max-width:1000px}
+  #ccLive{background:var(--cc-bg); color:var(--cc-ink); border:2px solid var(--cc-border); border-radius:12px; padding:.6rem .8rem}
+  #ccLog{margin-top:.4rem; max-height:140px; overflow:auto; font-size:.9rem; color:var(--muted)}
+
+  /* --- ÁLBUM MEJORADO --- */
+  .album,.diary{margin:1rem auto; max-width:1000px}
+  .cards-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top: 1rem;}
+  
+  .game-card {
+    background: linear-gradient(145deg, #1e2a4a, #162038);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-card::before{ content:''; position: absolute; top:-50%; left:-50%; width:200%; height:200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent); transform: rotate(45deg); pointer-events: none;}
+  .game-card.locked {
+    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.3);
+    box-shadow: none;
+  }
+  .game-card.locked .icon { opacity: 0.2; filter: grayscale(1); }
+  .game-card h4 { margin: 0.5rem 0; font-size: 1.1rem; color: var(--accent); }
+  .game-card.locked h4 { color: inherit; }
+  .game-card p { font-size: 0.9rem; line-height: 1.4; margin: 0; color: var(--muted); }
+  .game-card .status-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+  /* --- REWARD OVERLAY --- */
+  .reward-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000;
+    display: none; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(5px);
+  }
+  .reward-overlay.active { display: flex; opacity: 1; pointer-events: auto; }
+  .reward-content {
+    background: var(--card); border: 2px solid var(--gold); border-radius: 20px;
+    padding: 2rem; max-width: 400px; width: 90%; text-align: center;
+    transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 50px rgba(255, 197, 64, 0.2);
+  }
+  .reward-overlay.active .reward-content { transform: scale(1); }
+  .reward-star { font-size: 4rem; margin: 0; text-shadow: 0 0 20px var(--gold); animation: spinPop 1s ease; display: block;}
+  @keyframes spinPop { 0%{transform: scale(0) rotate(-180deg);} 70%{transform: scale(1.2) rotate(10deg);} 100%{transform: scale(1) rotate(0deg);} }
+  .reward-card-display { margin: 1.5rem auto; transform: rotate(-2deg); }
+
+  .diploma{display:none; text-align:center; margin:1rem auto}
+  .diploma canvas{max-width:100%; border:3px solid var(--gold); border-radius:16px}
+
+  /* Tutorial */
+  .tut-overlay{position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:flex-start; justify-content:center; z-index:9999; opacity:0; pointer-events:none; transition:opacity .2s}
+  .tut-overlay.active{display:flex; opacity:1; pointer-events:auto}
+  .tut-coach{margin-top:6vh; max-width:820px; background:var(--card); border:2px solid rgba(255,255,255,.25); border-radius:16px; padding:1rem}
+  .tut-actions{display:flex; gap:.6rem; justify-content:flex-end; margin-top:.6rem}
+  .highlight-ring{position:relative; z-index:9998; outline:4px solid var(--focus); outline-offset:2px; border-radius:12px}
+</style>
 </head>
 <body>
-    <header>
-        <h1><span class="book-icon">📋</span> <strong>Playbook: Misión 1 - 3ero de Primaria</strong></h1>
-        <div class="header-widgets">
-            <div class="timer-container">
-                <span id="global-timer">⏱️ 40:00</span>
-                <button id="global-start-stop">Start</button>
-                <button id="global-reset">Reset</button>
-            </div>
-            <div class="theme-toggle">
-                <i class="fas fa-sun"></i>
-                <label class="switch">
-                    <input type="checkbox" id="theme-toggle-input">
-                    <span class="slider round"></span>
-                </label>
-                <i class="fas fa-moon"></i>
-            </div>
-        </div>
-    </header>
-    <div class="main-container">
-        <aside class="activity-list">
-            <h2>Actividades</h2>
-            <ul>
-                <li><a href="#activity-0">📝</a></li>
-                <li><a href="#activity-1">1</a></li>
-                <li><a href="#activity-2">2</a></li>
-                <li><a href="#activity-3">3</a></li>
-                <li><a href="#activity-4">4</a></li>
-                <li><a href="#activity-5">5</a></li>
-            </ul>
-        </aside>
-        <main class="content">
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
-            <!-- ACTIVIDAD 0: DE UN VISTAZO -->
-            <div class="activity-card" id="activity-0">
-                <h2><span class="book-icon">📝</span> De un Vistazo: Comando Central</h2>
-                <p class="overview-subtitle">Todo lo que necesitas para preparar y ejecutar esta misión en minutos.</p>
-                
-                <div class="command-section">
-                    <h3>🎯 Objetivo de Aprendizaje</h3>
-                    <div class="objective-box">
-                        <p><strong>Los estudiantes podrán:</strong> usar el Micro:Bit en MakeCode para mostrar íconos en la matriz LED y comprender el funcionamiento de los microcontroladores y las instrucciones.</p>
-                    </div>
-                </div>
-                <div class="command-section xolo-prompt">
-                    <h3>🤖 Prompt de Referencia para XOLO (Solo para Maestro)</h3>
-                    <div class="prompt-box">
-                        <div class="prompt-header">
-                            <span class="prompt-label">⚠️ NOTA: XOLO ya conoce el tema de esta misión. Este prompt es SOLO de referencia en caso de emergencia técnica:</span>
-                            <button class="copy-btn" onclick="copyPrompt('main-prompt')">
-                                <i class="fas fa-copy"></i> Copiar
-                            </button>
-                        </div>
-                        <pre id="main-prompt">Explícame qué es un microcontrolador como el Micro:bit y por qué es como un “pequeño cerebro” que sigue instrucciones. Muéstrame cómo funciona la matriz LED y qué significa que un programa tenga un bloque AL INICIO. Después enséñame a leer un GCS simple para mostrar un ícono (por ejemplo, un corazón) y cómo eso se traduce a bloques en MakeCode.</pre>
-                    </div>
-                </div>
-                <div class="command-section">
-                    <h3>⚡ Puntos Esenciales de la Misión</h3>
-                    <div class="essentials-grid">
-                        <div class="essential-card">
-                            <div class="essential-icon">🎓</div>
-                            <h4>Concepto Clave</h4>
-                            <p>Microcontrolador: Es como un pequeño cerebro electrónico que guarda y sigue las instrucciones que tú le das.</p>
-                        </div>
-                        <div class="essential-card">
-                            <div class="essential-icon">🔧</div>
-                            <h4>Habilidad Técnica</h4>
-                            <p>Usar el Micro:bit para mostrar dibujos en su pantalla de luces.</p>
-                        </div>
-                        <div class="essential-card">
-                            <div class="essential-icon">🧪</div>
-                            <h4>Experimentación</h4>
-                            <p>Probar con diferentes íconos y tiempos para entender cómo el cerebro del robot sigue órdenes.</p>
-                        </div>
-                        <div class="essential-card">
-                            <div class="essential-icon">💬</div>
-                            <h4>Interacción con XOLO</h4>
-                            <p>XOLO ya conoce a cada estudiante y el tema de hoy. Solo abren el chat y comienzan a aprender. Tú guías el timing y motivación.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="command-section">
-                    <h3>📦 Checklist de Materiales</h3>
-                    <div class="materials-checklist">
-                        <label><input type="checkbox"> Proyector/pantalla + presentación (5 diapositivas)</label>
-                        <label><input type="checkbox"> Internet estable + Gnius Space con XOLO activo</label>
-                        <label><input type="checkbox"> Micro:Bit (1 por cada 2 estudiantes)</label>
-                        <label><input type="checkbox"> Acceso a MakeCode (https://makecode.microbit.org/) </label>
-                        <label><input type="checkbox"> Cables USB o porta baterías </label>
-                        <label><input type="checkbox"> ⚠️ Esta misión usa programación con BLOQUES en MakeCode</label>
-                        <label><input type="checkbox"> 📋 Para agregar extensión: En MakeCode → Extensiones → Buscar 'microbit' → Agregar</label>
-                    </div>
-                    <p class="care-reminder"><strong>🛡️ Cuidado del equipo:</strong> No doblar, verificar batería, desconectar al terminar.</p>
-                </div>
-                <div class="command-section">
-                    <h3>🗓️ Secuencia de la Misión (40 min)</h3>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-dot">1</div>
-                            <div class="timeline-content">
-                                <strong>Intro a la Misión</strong>
-                                <span class="time-badge">2 min</span>
-                                <p>Bienvenida, I Can Statement y contexto de la misión.</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot">2</div>
-                            <div class="timeline-content">
-                                <strong>A.I. Gym</strong>
-                                <span class="time-badge">8 min</span>
-                                <p>Los estudiantes abren el chat con XOLO y aprenden sobre microcontroladores y la matriz LED (sin prompt específico).</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot">3</div>
-                            <div class="timeline-content">
-                                <strong>Brain Spark</strong>
-                                <span class="time-badge">20 min</span>
-                                <p>Idear, construir y experimentar un programa con XOLO.</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot">4</div>
-                            <div class="timeline-content">
-                                <strong>Gnius STORM - Compartir</strong>
-                                <span class="time-badge">5 min</span>
-                                <p>Demostración y reflexión en parejas.</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-dot">5</div>
-                            <div class="timeline-content">
-                                <strong>Entrega de Evidencias</strong>
-                                <span class="time-badge">5 min</span>
-                                <p>Subir capturas a Gnius Space y finalizar misión.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="command-section">
-                    <h3>🚨 Resolución Rápida de Problemas</h3>
-                    <div class="troubleshooting-list">
-                        <ul>
-                            <li><strong>Si los alumnos no pueden ingresar a Gnius Space:</strong> Activa XOLO SOS en <a href="https://xolo.gnius.club" target="_blank">xolo.gnius.club</a> para continuar la misión sin interrumpir la clase.</li>
-                            <li><strong>Si el microcontrolador no responde:</strong> Verificar batería o conexión USB. Intentar descargar el programa nuevamente.</li><li><strong>Si hay errores en el código:</strong> Recordar a los estudiantes que XOLO puede ayudar a depurar. Pídeles que copien el error y se lo muestren a XOLO.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- ACTIVIDAD 1: INTRO A LA MISIÓN -->
-            <div class="activity-card" id="activity-1">
-                <div class="activity-header">
-                    <h2>🚀 Actividad 1: Intro a la Misión</h2>
-                    <div class="activity-timer">
-                        <span class="activity-duration">⏱️ 2:00</span>
-                        <button class="timer-start-btn" data-duration="120">Iniciar</button>
-                    </div>
-                </div>
-                <div class="roles-section">
-                    <div class="role-card role-teacher">
-                        <h4>👨‍🏫 Rol del Maestro</h4>
-                        <ul>
-                            <li>Dar la bienvenida con energía.</li>
-                            <li>Pedir a los alumnos que ingresen a Gnius Space.</li>
-                            <li>Proyecta diapositiva 1 con el I Can Statement.</li>
-                            <li>Motiva: "Hoy le daremos vida a sus Micro:Bit".</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-xolo">
-                        <h4>🤖 Rol de XOLO</h4>
-                        <ul>
-                            <li>XOLO ya está listo y conoce a cada estudiante.</li>
-                            <li>Sabe que hoy toca aprender sobre microcontroladores y la matriz LED.</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-student">
-                        <h4>👦 Rol del Alumno</h4>
-                        <ul>
-                            <li>Escucha la misión del día.</li>
-                            <li>Loguearse en Gnius Space.</li>
-                            <li>Preparación para trabajar en parejas.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="slide-reference">
-                    <h4>📊 Diapositiva 1: I Can Statement</h4>
-                    <div class="slide-content">
-                        <p><strong>🎯 Hoy seré capaz de:</strong></p>
-                        <p class="highlight-text">🤖 A programar la matriz LED para que muestre íconos divertidos.</p>
-                        <p><strong>Aplicación real:</strong> Los ingenieros en fábricas de juguetes usan esta tecnología para crear luces y sonidos en los juegos.</p>
-                        <p><strong>Tu aliado:</strong> XOLO ya sabe qué vas a aprender hoy. ¡Solo abre el chat y comienza!</p>
-                    </div>
-                </div>
-            </div>
-            <!-- ACTIVIDAD 2: A.I. GYM -->
-            <div class="activity-card" id="activity-2">
-                <div class="activity-header">
-                    <h2>🧠 Actividad 2: A.I. Gym</h2>
-                    <div class="activity-timer">
-                        <span class="activity-duration">⏱️ 8:00</span>
-                        <button class="timer-start-btn" data-duration="480">Iniciar</button>
-                    </div>
-                </div>
-                <div class="roles-section">
-                    <div class="role-card role-teacher">
-                        <h4>👨‍🏫 Rol del Maestro</h4>
-                        <ul>
-                            <li>Proyecta diapositiva 2.</li>
-                            <li>Indica: "Abran el chat con XOLO y salúdenlo. Él ya sabe qué les va a enseñar hoy."</li>
-                            <li>Circula para asegurar que todos interactúan con XOLO.</li>
-                            <li>Si alguien tiene dudas, recuérdale: "Pregúntale a XOLO, él te puede explicar de otra forma".</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-xolo">
-                        <h4>🤖 Rol de XOLO</h4>
-                        <p class="xolo-status">✅ XOLO ACTIVO</p>
-                        <ul>
-                            <li>Reconoce al estudiante y sus preferencias de aprendizaje.</li>
-                            <li>Explica cómo funciona la pantalla de luces (matriz LED) del Micro:bit.</li>
-                            <li>Introduce el concepto de microcontrolador como un pequeño cerebro.</li>
-                            <li>Responde dudas sobre los conceptos.</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-student">
-                        <h4>👦 Rol del Alumno</h4>
-                        <ul>
-                            <li>Abrir el chat con XOLO y saludarlo.</li>
-                            <li>Aprender a usar Micro:Bit para mostrar íconos.</li>
-                            <li>Aprender sobre microcontroladores e instrucciones.</li>
-                            <li>Despejar todas sus dudas preguntando a XOLO.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="slide-reference">
-                    <h4>📊 Diapositiva 2: A.I. GYM</h4>
-                    <div class="slide-content">
-                        <p><strong>💬 Abre el chat con XOLO y salúdalo:</strong></p>
-                        <div class="prompt-box">
-                            <pre>"¡Hola XOLO! Estoy listo para aprender."</pre>
-                        </div>
-                        <p class="highlight-text" style="margin-top: 1rem;">✨ XOLO ya sabe quién eres y qué tema toca hoy. ¡Solo empieza a conversar!</p>
-                        <p class="highlight-text">🎯 Objetivo: Aprender a usar Micro:Bit para mostrar íconos y entender qué es un microcontrolador.</p>
-                    </div>
-                </div>
-                
-                <div class="optional-script">
-                    <button class="collapsible-button">📖 Ver guion detallado (opcional)</button>
-                    <div class="collapsible-content">
-                        <p class="dialogue assistant">Ahora vamos a empezar nuestra aventura tecnológica. Abran el chat con XOLO y simplemente salúdenlo. XOLO ya los conoce a cada uno de ustedes y sabe exactamente qué les va a enseñar hoy sobre los microcontroladores. No necesitan escribir un prompt especial o instrucciones complicadas, solo empiecen a platicar con él como lo harían con un amigo. Él les explicará por qué el Micro:bit es como un pequeño cerebro que espera sus órdenes. Si tienen dudas sobre la matriz LED o cómo dar instrucciones, ¡pregúntenle a XOLO! Él está aquí para ayudarlos a ser expertos en tecnología.</p>
-                    </div>
-                </div>
-            </div>
-            <!-- ACTIVIDAD 3: BRAIN SPARK -->
-            <div class="activity-card" id="activity-3">
-                <div class="activity-header">
-                    <h2>💡 Actividad 3: Brain Spark</h2>
-                    <div class="activity-timer">
-                        <span class="activity-duration">⏱️ 20:00</span>
-                        <button class="timer-start-btn" data-duration="1200">Iniciar</button>
-                    </div>
-                </div>
-                <div class="roles-section">
-                    <div class="role-card role-teacher">
-                        <h4>👨‍🏫 Rol del Maestro</h4>
-                        <ul>
-                            <li>Proyecta la diapositiva 3.</li>
-                            <li>Indica: "Pidan a XOLO que los ayude a idear un proyecto. Cuando tengan su GCS, pásenlo a bloques en MakeCode, prueben en el simulador y luego con el hardware real".</li>
-                            <li>Entrega por parejas los Micro:Bits conforme los alumnos prueben su GCS en el simulador.</li>
-                            <li>Si hay errores, recuerda: "Pregúntenle a XOLO, él los ayuda a depurar".</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-xolo">
-                        <h4>🤖 Rol de XOLO</h4>
-                        <p class="xolo-status">✅ XOLO ACTIVO</p>
-                        <ul>
-                            <li>Ayuda a desarrollar una idea y un VIBE que aplique mostrar íconos en la matriz LED.</li>
-                            <li>Entrega el GCS de la idea del genio.</li>
-                            <li>Resuelve errores de sintaxis o lógica.</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-student">
-                        <h4>👦 Rol del Alumno</h4>
-                        <ul>
-                            <li>Trabajar con XOLO una idea y un VIBE para usar la matriz LED y crear una insignia.</li>
-                            <li>Traducir el GCS de XOLO a bloques en MakeCode.</li>
-                            <li>Depurar su programa con XOLO si hay errores.</li>
-                            <li>Conectar su Micro:bit a la computadora y probar.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="slide-reference">
-                    <h4>📊 Diapositiva 3: Brain Spark</h4>
-                    <div class="slide-content">
-                        <p><strong>1. 💬 Pide a XOLO que te ayude a crear:</strong></p>
-                        <div class="prompt-box">
-                            <pre>"Ayúdame a idear una “insignia digital” en Micro:bit con una vibe simple (por ejemplo: “mensaje feliz”, “saludo divertido” o “símbolo secreto”). Genera un GCS corto que use AL INICIO para mostrar un ícono y luego ayúdame a traducirlo a bloques en MakeCode para crear mi primera animación."</pre>
-                        </div>
-                        <p style="margin-top: 1.5rem;"><strong>2. 🔬 Experimenta y descubre con tu programa:</strong></p>
-                        <ul>
-                            <li>¿Aparece el dibujo en el Micro:bit justo al encenderlo?</li>
-                            <li>¿Qué pasa si intentas dibujar un ícono muy grande en la pantalla de 5x5?</li>
-                            <li>¿Funciona igual si usas el bloque 'al iniciar' que si usas otro bloque?</li>
-                            <li>Si el Micro:bit sigue tus instrucciones paso a paso, ¿qué pasa si olvidas darle una instrucción importante?</li>
-                            <li>¿Cómo ayuda el Vibe Coding a que tu idea se convierta en luces en el Micro:bit?</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="optional-script">
-                    <button class="collapsible-button">📖 Ver guion detallado (opcional)</button>
-                    <div class="collapsible-content">
-                        <p class="dialogue assistant">¡Es hora de crear nuestra propia insignia digital! Vamos a usar nuestra imaginación para decidir qué mensaje o dibujo queremos que el mundo vea. El flujo de trabajo es emocionante: primero ideamos con XOLO, elegimos un VIBE divertido, recibimos nuestro código GCS, lo pasamos a bloques en MakeCode y finalmente experimentamos con el Micro:bit real. Por ejemplo, podrían crear una insignia que parpadee o un símbolo secreto para sus amigos. No olviden revisar las preguntas de experimentación para descubrir cosas nuevas. Al terminar, recuerden entregar el hardware con mucho cuidado. Si tienen errores o dudas, pregúntenle a XOLO, él los ayudará a depurar.</p>
-                    </div>
-                </div>
-                <div class="challenge-prompt">
-                    <h4>🚀 Prompt de Desafío (para quienes terminen rápido)</h4>
-                    <div class="prompt-box">
-                        <p><strong>Si ya experimentaste con todo, pregunta a XOLO:</strong></p>
-                        <p class="challenge-text">"Ya probé con mostrar un corazón. ¿Puedes enseñarme cómo hacer que mi Micro:bit muestre una animación de varios íconos seguidos?"</p>
-                    </div>
-                </div>
-            </div>
-            <!-- ACTIVIDAD 4: GNIUS STORM - COMPARTIR -->
-            <div class="activity-card" id="activity-4">
-                <div class="activity-header">
-                    <h2>⚡ Actividad 4: Gnius STORM - Compartir y Reflexionar</h2>
-                    <div class="activity-timer">
-                        <span class="activity-duration">⏱️ 5:00</span>
-                        <button class="timer-start-btn" data-duration="300">Iniciar</button>
-                    </div>
-                </div>
-                <div class="roles-section">
-                    <div class="role-card role-teacher">
-                        <h4>👨‍🏫 Rol del Maestro</h4>
-                        <ul>
-                            <li>Organiza las parejas para compartir.</li>
-                            <li>Gestiona los tiempos: 2 min demo + 2 min reflexión + 1 min cierre.</li>
-                            <li>Facilita retroalimentación constructiva.</li>
-                            <li>Cierra con reflexión sobre aplicaciones reales.</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-xolo">
-                        <h4>🤖 Rol de XOLO</h4>
-                        <p class="xolo-status">⏸️ XOLO EN ESPERA</p>
-                        <ul>
-                            <li>Disponible solo si hay dudas finales urgentes.</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-student">
-                        <h4>👦 Rol del Alumno</h4>
-                        <ul>
-                            <li>Demuestra su programa funcionando a otra pareja.</li>
-                            <li>Explica qué dibujos se ven bien en la matriz LED.</li>
-                            <li>Comparte un descubrimiento interesante.</li>
-                            <li>Da retroalimentación positiva al compañero.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="slide-reference">
-                    <h4>📊 Diapositiva 4: Think-Pair-Share</h4>
-                    <div class="slide-content tps-structure">
-                        <div class="tps-phase">
-                            <h4>🤔 THINK (30 seg)</h4>
-                            <p>Reflexión individual: ¿Qué dibujos se ven mejor en tu Micro:bit? ¿Qué te sorprendió de cómo recibe instrucciones?</p>
-                        </div>
-                        <div class="tps-phase">
-                            <h4>👥 PAIR (2 min)</h4>
-                            <p>Con otra pareja: Demuestren su programa y expliquen su experiencia</p>
-                            <p class="highlight-text">Frase guía: "Mi Micro:bit muestra una cara feliz. Me sorprendió que sigue las órdenes muy rápido."</p>
-                        </div>
-                        <div class="tps-phase">
-                            <h4>💬 SHARE (2 min)</h4>
-                            <p>Retroalimentación mutua y cierre del maestro.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ACTIVIDAD 5: ENTREGA DE EVIDENCIAS -->
-            <div class="activity-card" id="activity-5">
-                <div class="activity-header">
-                    <h2>✅ Actividad 5: Entrega de Evidencias</h2>
-                    <div class="activity-timer">
-                        <span class="activity-duration">⏱️ 5:00</span>
-                        <button class="timer-start-btn" data-duration="300">Iniciar</button>
-                    </div>
-                </div>
-                <div class="roles-section">
-                    <div class="role-card role-teacher">
-                        <h4>👨‍🏫 Rol del Maestro</h4>
-                        <ul>
-                            <li>Proyecta diapositiva 5 con las instrucciones.</li>
-                            <li>Guía a los estudiantes para tomar las capturas.</li>
-                            <li>Asegura que todos suban sus evidencias a Gnius Space.</li>
-                            <li>Felicita al grupo por completar la misión.</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-xolo">
-                        <h4>🤖 Rol de XOLO</h4>
-                        <p class="xolo-status">⭕ XOLO FINALIZADO</p>
-                        <ul>
-                            <li>La interacción con XOLO ha terminado para esta misión.</li>
-                        </ul>
-                    </div>
-                    <div class="role-card role-student">
-                        <h4>👦 Rol del Alumno</h4>
-                        <ul>
-                            <li>Tomar screenshot de su código en MakeCode.</li>
-                            <li>Tomar screenshot de su conversación con XOLO.</li>
-                            <li>Subir ambas evidencias a Gnius Space.</li>
-                            <li>Dar click en "Finalizar Misión".</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="slide-reference">
-                    <h4>📊 Diapositiva 5: ¡Misión Cumplida!</h4>
-                    <div class="slide-content">
-                        <p><strong>📸 Para terminar, sube tus evidencias a Gnius Space:</strong></p>
-                        <ol>
-                            <li>Una captura de pantalla de tu programa final en <strong>MakeCode</strong>.</li>
-                            <li>Una captura de pantalla de tu conversación con <strong>XOLO</strong> donde te dio tu GCS.</li>
-                        </ol>
-                        <p class="highlight-text" style="margin-top: 1rem;">¡No olvides dar click en el botón <strong>"Finalizar Misión"</strong> cuando termines!</p>
-                    </div>
-                </div>
-            </div>
-        </main>
+  <header class="panel">
+    <h1>El Arqueólogo del Tiempo Digital</h1>
+    <div class="toolbar">
+      <button id="startBtn" class="btn btn-cta">🚀 Reiniciar Expedición</button>
+      <button id="tutorialBtn" class="btn btn-ghost" title="Tutorial guiado">🧭 Tutorial</button>
+      <div class="switch" aria-label="Energía"><strong>⚡</strong><span id="energyBar" style="display:inline-flex; gap:.25rem"></span></div>
     </div>
-    <script src="script.js"></script>
+  </header>
+
+  <div id="progressBar" class="progress-bar" role="status" aria-label="Progreso"></div>
+
+  <main id="game" class="panel">
+    <div id="grid" class="fossils" role="list" aria-label="Fósiles"></div>
+
+    <div id="chrono" class="panel" role="dialog" aria-modal="true" aria-labelledby="cTitle" aria-describedby="cDesc">
+      <h2 id="cTitle">Visión del Futuro</h2>
+      <div id="cIcon" aria-hidden="true"></div>
+      <p id="cCause" style="font-size:1.1rem; color:#fff"></p>
+      <p id="cDesc" style="color:var(--accent)"></p>
+      <div id="qBadge" class="qbadge" aria-hidden="true">⏲️ <span id="qTime">12</span>s</div>
+      
+      <div id="decisionArea">
+        <div class="choices" role="group" aria-label="Clasificar huella">
+          <button class="choice positive" id="btnPos">👍 Huella Positiva <small style="display:block; font-weight:600; font-size:0.8em; opacity:0.9">(ayuda, construye)</small></button>
+          <button class="choice negative" id="btnNeg">👎 Huella Negativa <small style="display:block; font-weight:600; font-size:0.8em; opacity:0.9">(riesgo, daña)</small></button>
+        </div>
+      </div>
+      
+      <div id="status" role="status" aria-live="polite" style="margin-top:1rem; min-height: 2rem;"></div>
+      
+      <!-- Zona de Reflexión (se inyecta dinámicamente) -->
+      <div id="reflectionArea" style="display:none; margin-top:1rem; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem;"></div>
+    </div>
+  </main>
+
+  <section id="cc" aria-label="Subtítulos">
+    <div id="ccLive" aria-live="polite">—</div>
+  </section>
+
+  <!-- SECCIÓN ÁLBUM MEJORADA -->
+  <section class="panel album" id="albumSection">
+    <div style="display:flex; justify-content:space-between; align-items:center">
+      <h2>📚 Álbum de Conocimiento</h2>
+      <span id="albumCount" style="background:var(--accent); color:#000; padding:2px 8px; border-radius:10px; font-weight:bold">0/4</span>
+    </div>
+    <div class="cards-grid" id="albumCards">
+      <!-- Se llenará con JS -->
+    </div>
+  </section>
+
+  <section class="diploma" id="diplomaSection">
+    <h2>🏆 Diploma</h2>
+    <canvas id="diplomaCanvas" width="900" height="560" aria-label="Diploma"></canvas>
+    <p><button id="downloadDiploma" class="btn btn-cta">Descargar Diploma</button></p>
+  </section>
+
+  <!-- OVERLAY DE RECOMPENSA (CARTA) -->
+  <div class="reward-overlay" id="rewardOverlay">
+    <div class="reward-content">
+      <div class="reward-star">🌟</div>
+      <h2 style="color:var(--gold); margin:0.5rem 0;">¡Excelente Trabajo!</h2>
+      <p>Has entendido la conexión y completado el análisis.</p>
+      
+      <div id="rewardCardContainer" class="reward-card-display">
+        <!-- Aquí se clona la carta ganada -->
+      </div>
+
+      <button id="collectCardBtn" class="btn btn-cta" style="font-size:1.2rem; width:100%; box-shadow: 0 4px 15px var(--accent);">
+        📥 Guardar en el Álbum
+      </button>
+    </div>
+  </div>
+
+  <!-- Overlay Tutorial -->
+  <div class="tut-overlay" id="tutOverlay" role="dialog" aria-modal="true" aria-labelledby="tutTitle" tabindex="-1">
+    <div class="tut-coach">
+      <h2 id="tutTitle">🧭 Tutorial guiado</h2>
+      <div id="tutDesc"></div>
+      <div class="tut-actions">
+        <button class="btn btn-ghost" id="tutSkip">Saltar</button>
+        <button class="btn btn-cta" id="tutNext">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/******** Datos ********/
+const BASE_FOSILES=[
+ {id:'comentario', titulo:'El Comentario Enojado', tipo:'Comentario', causa:'Comentario: “¡Perdimos por tu culpa, Leo!”', consecuencia:'Leo abandona el equipo muy triste.', correcta:'negativo', pistas:['¿Ayuda o hiere al equipo?','Las palabras escritas permanecen.','Regla: Trata como quieres ser tratado.'], cardTitle:'Respeto Digital', cardText:'Tus palabras tienen poder. Si estás enojado, espera antes de escribir. Una disculpa a tiempo puede arreglarlo.'},
+ {id:'foto', titulo:'La Foto Graciosa', tipo:'Foto', causa:'Foto de Alex en pijama con burlas.', consecuencia:'Un club escolar lo rechaza por "inmaduro".', correcta:'negativo', pistas:['¿Te gustaría que todos lo vieran?','Afecta tu reputación futura.','No publiques para ridiculizar.'], cardTitle:'Imagen Pública', cardText:'Lo que subes hoy construye quién eres mañana. Pide permiso antes de subir fotos de otros.'},
+ {id:'post', titulo:'El Agradecimiento', tipo:'Post', causa:'Post público agradeciendo ayuda a Sara.', consecuencia:'Sara sonríe y la amistad mejora.', correcta:'positivo', pistas:['¿Crea confianza?','La gratitud pública es poderosa.','Genera un ambiente positivo.'], cardTitle:'Huella Positiva', cardText:'Internet también sirve para cosas buenas. Agradecer y apoyar crea una comunidad segura.'},
+ {id:'ubicacion', titulo:'Ubicación Exacta', tipo:'Ubicación', causa:'Foto etiquetada en "Parque Aventura" ahora.', consecuencia:'Un desconocido rastrea sus rutinas.', correcta:'negativo', pistas:['¿Es seguro decir dónde estás ya?','Muestra tus rutinas a extraños.','Publica la foto DESPUÉS de irte.'], cardTitle:'Seguridad Real', cardText:'Nunca compartas tu ubicación en tiempo real públicamente. Hazlo en privado o cuando ya te hayas ido.'}
+];
+
+/******** Estado ********/
+const LS_COLLECTED='ecos_collected_ids'; 
+let orden=[], aciertos=0, intentos=[], current=null, energy=3, narrationOn=true;
+let tutorialMode=false, tutorialStep=0;
+let collectedCards = []; // IDs de las cartas conseguidas
+
+/******** Voz + CC ********/
+function cc(text){ const live=document.getElementById('ccLive'); if(live) live.textContent=text; }
+function speakBase(prefix, text){ const full=`${prefix}${text}`; cc(full); if(!narrationOn||!('speechSynthesis' in window)) return; const u=new SpeechSynthesisUtterance(full); u.lang='es-MX'; try{ speechSynthesis.cancel(); }catch{} speechSynthesis.speak(u); }
+const speakGuardian=(t)=>speakBase('Guardián: ', t);
+const speakSystem=(t)=>speakBase('', t);
+
+/******** Gráficos SVG ********/
+function iconForTypeSVG(tipo, size=56){
+  const common=(b)=>`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120' width='${size}' height='${size}' role='img' aria-label='${tipo}' style='color:inherit'>${b}</svg>`;
+  if(tipo==='Comentario') return common(`<rect x='10' y='20' rx='14' width='100' height='70' fill='var(--chip-chat)'></rect><circle cx='28' cy='50' r='6' fill='#fff'/><circle cx='48' cy='50' r='6' fill='#fff'/><circle cx='68' cy='50' r='6' fill='#fff'/><path d='M30 90 L20 110 L48 92' fill='var(--chip-chat)'/>`);
+  if(tipo==='Foto') return common(`<rect x='14' y='24' rx='10' width='92' height='72' fill='var(--chip-foto)'></rect><circle cx='44' cy='50' r='10' fill='#fff'/><path d='M34 78 L54 58 L72 72 L86 60 L100 78 Z' fill='#fff'/>`);
+  if(tipo==='Post') return common(`<rect x='16' y='24' rx='10' width='88' height='72' fill='var(--chip-post)'></rect><rect x='28' y='40' width='64' height='10' rx='5' fill='#fff'/><rect x='28' y='58' width='48' height='10' rx='5' fill='#fff'/><path d='M90 84 a10 10 0 1 1 -20 0 a10 10 0 1 1 20 0' fill='#fff'/>`);
+  return common(`<rect x='20' y='20' rx='12' width='80' height='80' fill='var(--chip-ubi)'></rect><path d='M60 36a18 18 0 0 0-18 18c0 14 18 36 18 36s18-22 18-36A18 18 0 0 0 60 36zm0 12a6 6 0 1 1 0 12 6 6 0 0 1 0-12z' fill='#fff'/>`);
+}
+
+/******** Renderizado UI ********/
+function setEnergy(e){ energy=Math.max(0,Math.min(3,e)); const bar=document.getElementById('energyBar'); if(!bar) return; bar.innerHTML=''; for(let i=0;i<3;i++){const b=document.createElement('span'); b.style.width='18px';b.style.height='26px';b.style.display='inline-block';b.style.clipPath='polygon(45% 0, 60% 0, 40% 40%, 65% 40%, 25% 100%, 40% 60%, 15% 60%)'; b.style.background=i<energy?'var(--accent2)':'#6d7fb0'; b.style.border='2px solid '+(i<energy?'#1d6b32':'#3b4a7a'); bar.appendChild(b);} }
+
+function renderProgress(){ const bar=document.getElementById('progressBar'); bar.innerHTML=''; orden.forEach((idx,i)=>{ const dot=document.createElement('div'); dot.className='progress-dot pending'; dot.id='dot'+i; bar.appendChild(dot); }); }
+
+function renderGrid(){ 
+  const grid=document.getElementById('grid'); grid.innerHTML=''; 
+  orden.forEach((idx,i)=>{ 
+    const f=BASE_FOSILES[idx]; 
+    const isSolved = collectedCards.includes(f.id);
+    const btn=document.createElement('button'); 
+    btn.className='fossil' + (isSolved ? ' solved' : ''); 
+    btn.disabled = isSolved;
+    btn.innerHTML=`<div class="icon">${iconForTypeSVG(f.tipo)}</div><div><span class="chip chip--${f.tipo}">${f.tipo}</span><h3>${f.titulo}</h3><p><strong>Estado:</strong> ${isSolved ? '✅ Completado' : '❓ Investigar'}</p></div>`; 
+    btn.onclick=()=>mostrarFosil(i); 
+    grid.appendChild(btn); 
+  }); 
+}
+
+/* --- LÓGICA DEL ÁLBUM VISUAL --- */
+function renderAlbum(){ 
+  // Recuperar cartas guardadas
+  try { collectedCards = JSON.parse(localStorage.getItem(LS_COLLECTED) || '[]'); } catch(e){ collectedCards=[]; }
+  
+  const box=document.getElementById('albumCards'); 
+  box.innerHTML='';
+  document.getElementById('albumCount').textContent = `${collectedCards.length}/4`;
+
+  BASE_FOSILES.forEach(f => {
+    const isUnlocked = collectedCards.includes(f.id);
+    const cardDiv = document.createElement('div');
+    cardDiv.className = `game-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+    
+    if(isUnlocked){
+      cardDiv.innerHTML = `
+        <div class="icon" style="color:var(--ink)">${iconForTypeSVG(f.tipo, 48)}</div>
+        <h4>${f.cardTitle}</h4>
+        <p>${f.cardText}</p>
+      `;
+    } else {
+      cardDiv.innerHTML = `
+        <div class="status-icon">🔒</div>
+        <h4>Bloqueado</h4>
+        <p>Resuelve el caso "${f.titulo}" para ver esta carta.</p>
+      `;
+    }
+    box.appendChild(cardDiv);
+  });
+}
+
+/******** Flujo del Juego ********/
+function iniciar(){
+  orden=BASE_FOSILES.map((_,i)=>i); 
+  // No aleatorizamos orden para simplificar debug, descomentar si se desea:
+  // orden.sort(() => Math.random() - 0.5);
+  
+  intentos=Array(orden.length).fill(0); 
+  aciertos=0; current=null; setEnergy(3);
+  
+  // Limpiar colección al iniciar partida nueva si se desea, o mantener progreso:
+  // collectedCards = []; localStorage.setItem(LS_COLLECTED, '[]'); 
+  // *Para este demo, mantenemos progreso entre recargas, pero botón inicio limpia sesión visual actual*
+  
+  renderAlbum(); // Dibuja el estado actual
+  renderProgress(); 
+  renderGrid(); 
+  
+  document.getElementById('diplomaSection').style.display='none'; 
+  document.getElementById('chrono').style.display='none';
+  if(!tutorialMode && collectedCards.length < 4) speakGuardian('Bienvenido Arqueólogo. Tienes fósiles pendientes por analizar.');
+  if(collectedCards.length === 4) finalizar();
+}
+
+/******** Cronoscopio ********/
+function mostrarFosil(i){ 
+  current=i; 
+  const f=BASE_FOSILES[orden[i]]; 
+  const ch=document.getElementById('chrono'); 
+  ch.classList.add('active'); ch.style.display='block'; 
+  
+  // Resetear vista del cronoscopio
+  document.getElementById('cTitle').textContent=f.titulo; 
+  document.getElementById('cCause').textContent='Causa: '+f.causa; 
+  document.getElementById('cDesc').textContent='Consecuencia: '+f.consecuencia; 
+  document.getElementById('cIcon').innerHTML=iconForTypeSVG(f.tipo, 100); 
+  document.getElementById('status').textContent='Analiza: ¿Esto fue positivo o negativo?';
+  
+  document.getElementById('decisionArea').style.display = 'block';
+  document.getElementById('reflectionArea').style.display = 'none';
+  document.getElementById('reflectionArea').innerHTML = '';
+  
+  document.getElementById('grid').scrollIntoView({behavior:'smooth'});
+  speakGuardian('He activado el Cronoscopio. Mira la consecuencia.'); 
+}
+
+function clasificar(resp){ 
+  if(current==null) return; 
+  const f=BASE_FOSILES[orden[current]]; 
+  const correcto=(resp===f.correcta); 
+  const dot=document.getElementById('dot'+current); 
+
+  if(correcto){ 
+    // ÉXITO
+    if(dot) dot.className='progress-dot correct'; 
+    setEnergy(Math.min(3, energy+1)); 
+    speakSystem('¡Correcto! Entendiste la relación.');
+    
+    // Ocultar botones de decisión y mostrar reflexión
+    document.getElementById('decisionArea').style.display = 'none';
+    const refArea = document.getElementById('reflectionArea');
+    refArea.style.display = 'block';
+    
+    // Generar opciones de reflexión
+    const optAText = f.id==='comentario'?'Pedir disculpas y hablarlo en persona': f.id==='foto'?'Pedir permiso antes de subirla': f.id==='post'?'Agradecer con respeto':'Compartir la ubicación al salir del lugar';
+    const optBText = f.id==='comentario'?'Bloquear a todos': f.id==='foto'?'Borrarla y no decir nada': f.id==='post'?'Pedirle dinero':'No decir nunca dónde estás';
+    
+    refArea.innerHTML = `
+      <p><strong>Reflexión Final:</strong> ¿Qué acción construirá un mejor futuro?</p>
+      <div style='display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap'>
+        <button class='choice positive' id='refA' style="font-size:0.9rem; padding:0.6rem">${optAText}</button>
+        <button class='choice negative' id='refB' style="font-size:0.9rem; padding:0.6rem; opacity:0.7">${optBText}</button>
+      </div>
+    `;
+
+    // Ambas opciones llevan a la recompensa (el aprendizaje es la selección previa)
+    // pero la UI sugiere la correcta con colores.
+    document.getElementById('refA').onclick = () => triggerReward(f);
+    document.getElementById('refB').onclick = () => triggerReward(f);
+    
+    document.getElementById('status').innerHTML = "¡Excelente! Ahora elige la mejor acción para cerrar el caso.";
+
+  } else { 
+    // ERROR
+    if(dot) dot.className='progress-dot retry'; 
+    setEnergy(energy-1); 
+    const pista = f.pistas[intentos[current] % f.pistas.length];
+    intentos[current]++;
+    document.getElementById('status').innerHTML=`❌ Piénsalo bien. <br><span style="color:var(--focus)">Pista: ${pista}</span>`; 
+    speakSystem('Inténtalo de nuevo. ' + pista); 
+  }
+}
+
+/* --- SISTEMA DE RECOMPENSAS --- */
+function triggerReward(fossilData){
+  // 1. Cerrar Cronoscopio
+  document.getElementById('chrono').classList.remove('active');
+  document.getElementById('chrono').style.display='none';
+
+  // 2. Preparar Overlay
+  const overlay = document.getElementById('rewardOverlay');
+  const cardContainer = document.getElementById('rewardCardContainer');
+  
+  // Crear visualmente la carta para el overlay
+  cardContainer.innerHTML = `
+    <div class="game-card" style="width:220px; margin:0 auto; transform:scale(1.1); box-shadow:0 10px 30px rgba(0,0,0,0.5)">
+      <div class="icon" style="color:#fff">${iconForTypeSVG(fossilData.tipo, 60)}</div>
+      <h4 style="color:var(--accent); font-size:1.3rem; margin:0.5rem 0">${fossilData.cardTitle}</h4>
+      <p style="color:#ddd">${fossilData.cardText}</p>
+    </div>
+  `;
+
+  // 3. Mostrar Overlay
+  overlay.classList.add('active');
+  speakGuardian('¡Magnífico! Has desbloqueado una nueva tarjeta de sabiduría.');
+  
+  // Configurar el botón "Guardar"
+  const btn = document.getElementById('collectCardBtn');
+  btn.onclick = () => {
+    collectCard(fossilData.id);
+  };
+  btn.focus();
+}
+
+function collectCard(id){
+  // 1. Guardar datos
+  if(!collectedCards.includes(id)){
+    collectedCards.push(id);
+    localStorage.setItem(LS_COLLECTED, JSON.stringify(collectedCards));
+  }
+  
+  // 2. Ocultar Overlay
+  document.getElementById('rewardOverlay').classList.remove('active');
+  
+  // 3. Actualizar UI
+  renderAlbum();
+  renderGrid(); // Bloquea el fósil completado
+  
+  // 4. Scroll al álbum para feedback visual
+  document.getElementById('albumSection').scrollIntoView({behavior:'smooth'});
+  speakSystem('Tarjeta guardada en el álbum.');
+
+  // 5. Verificar victoria
+  if(collectedCards.length === BASE_FOSILES.length){
+    setTimeout(finalizar, 1500);
+  }
+}
+
+function finalizar(){
+  speakGuardian('¡Misión cumplida! Has completado el Álbum de Ecos y eres un experto.'); 
+  mostrarDiploma();
+  document.getElementById('diplomaSection').scrollIntoView({behavior:'smooth'});
+}
+
+/* --- DIPLOMA --- */
+function mostrarDiploma(){ 
+  const section=document.getElementById('diplomaSection'); section.style.display='block'; 
+  const canvas=document.getElementById('diplomaCanvas'); const ctx=canvas.getContext('2d'); 
+  
+  // Fondo
+  ctx.fillStyle='#fff8e1'; ctx.fillRect(0,0,canvas.width,canvas.height); 
+  ctx.strokeStyle='#fbc02d'; ctx.lineWidth=15; ctx.strokeRect(20,20,canvas.width-40,canvas.height-40); 
+  
+  // Texto
+  ctx.fillStyle='#222'; ctx.font='bold 40px Arial'; ctx.textAlign='center';
+  ctx.fillText('CERTIFICADO DE EXCELENCIA', canvas.width/2, 120); 
+  
+  ctx.font='30px Arial';
+  ctx.fillText('Se otorga el título de:', canvas.width/2, 180); 
+  
+  ctx.fillStyle='#2B7EA7'; ctx.font='bold 50px Arial';
+  ctx.fillText('ARQUEÓLOGO/A DIGITAL', canvas.width/2, 250); 
+  
+  ctx.fillStyle='#555'; ctx.font='24px Arial';
+  ctx.fillText('Por comprender que cada huella deja un eco en el futuro.', canvas.width/2, 320); 
+  
+  // Estrellas
+  ctx.fillStyle='#fbc02d';
+  for(let i=0; i<4; i++){
+    let x = 350 + (i*70);
+    drawStar(ctx, x, 400, 20, 5, 2);
+  }
+  
+  const date=new Date().toLocaleDateString(); 
+  ctx.font='20px Arial'; ctx.fillStyle='#888';
+  ctx.fillText('Fecha: '+date,canvas.width/2, 500); 
+}
+
+function drawStar(ctx,x,y,r,n,inset){
+  ctx.save(); ctx.beginPath(); ctx.translate(x,y); ctx.moveTo(0,0-r);
+  for(let i=0;i<n;i++){ ctx.rotate(Math.PI/n); ctx.lineTo(0,0-(r/inset)); ctx.rotate(Math.PI/n); ctx.lineTo(0,0-r); }
+  ctx.fill(); ctx.restore();
+}
+
+/* --- TUTORIAL --- */
+const TSTEPS=[
+  {txt:'¡Hola! Soy el Guardián. Te enseñaré a rastrear huellas digitales.', act:()=>{}},
+  {sel:'#grid', txt:'Aquí están los fósiles digitales. Elige uno para investigar.', act:()=>{}},
+  {sel:'#albumSection', txt:'Tu objetivo es desbloquear las 4 tarjetas del Álbum.', act:()=>{document.getElementById('albumSection').scrollIntoView()}},
+  {sel:null, txt:'¡Comencemos! Elige un fósil y usa el Cronoscopio.', act:()=>{document.getElementById('game').scrollIntoView()}}
+];
+function runTutorial(){
+  tutorialMode=true;
+  const overlay=document.getElementById('tutOverlay');
+  const title=document.getElementById('tutTitle');
+  const desc=document.getElementById('tutDesc');
+  const btnNext=document.getElementById('tutNext');
+  
+  let step=0;
+  overlay.classList.add('active');
+  
+  const show=()=>{
+    const s=TSTEPS[step];
+    desc.textContent=s.txt;
+    document.querySelectorAll('.highlight-ring').forEach(e=>e.classList.remove('highlight-ring'));
+    if(s.sel){
+      const el=document.querySelector(s.sel);
+      if(el) { el.classList.add('highlight-ring'); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+    }
+    if(s.act) s.act();
+    btnNext.textContent = step===TSTEPS.length-1 ? 'Jugar' : 'Siguiente';
+  };
+  
+  show();
+  
+  btnNext.onclick=()=>{
+    step++;
+    if(step>=TSTEPS.length){ 
+      tutorialMode=false; overlay.classList.remove('active'); 
+      document.querySelectorAll('.highlight-ring').forEach(e=>e.classList.remove('highlight-ring'));
+    } else { show(); }
+  };
+  document.getElementById('tutSkip').onclick=()=>{
+      tutorialMode=false; overlay.classList.remove('active');
+      document.querySelectorAll('.highlight-ring').forEach(e=>e.classList.remove('highlight-ring'));
+  };
+}
+
+/******** Listeners ********/
+document.getElementById('btnPos').onclick=()=>clasificar('positivo');
+document.getElementById('btnNeg').onclick=()=>clasificar('negativo');
+document.getElementById('startBtn').onclick=()=>{ 
+  if(confirm('¿Reiniciar todo el progreso?')){
+    localStorage.removeItem(LS_COLLECTED);
+    iniciar(); 
+  }
+};
+document.getElementById('tutorialBtn').onclick=()=>runTutorial();
+document.getElementById('downloadDiploma').onclick=()=>{ 
+  const link=document.createElement('a'); link.download='diploma-ecos.png'; 
+  link.href=document.getElementById('diplomaCanvas').toDataURL(); link.click(); 
+};
+
+// Arranque
+renderAlbum();
+if(collectedCards.length < 4) iniciar(); else { renderGrid(); finalizar(); }
+
+</script>
 </body>
 </html>
